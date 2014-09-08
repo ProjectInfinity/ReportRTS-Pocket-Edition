@@ -18,8 +18,8 @@ class ReportRTS extends PluginBase {
     public $debug;
 
     public function onEnable() {
-        $this->getLogger()->info("Welcome to the Alpha for ReportRTS. Please report any bugs you may discover,
-        this project is a large Bukkit project that is being ported to PocketMine.");
+        $this->getLogger()->info("Welcome to the Alpha for ReportRTS. Please report any bugs you may discover to https://github.com/ProjectInfinity/ReportRTS/issues.
+        This project is a large Bukkit project that is being ported to PocketMine.");
         $this->reloadSettings();
     }
 
