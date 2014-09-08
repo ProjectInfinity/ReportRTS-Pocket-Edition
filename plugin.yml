@@ -9,8 +9,10 @@ commands:
     usage: "/ticket <action> <arguments>"
     permission: "reportrts.ticket"
     aliases: [report]
+    default: op
   reportrts:
     description: "General ReportRTS management command"
     usage: "/reportrts <action> <arguments>"
     permission: "reportrts.rts"
     aliases: [rts]
+    default: op
