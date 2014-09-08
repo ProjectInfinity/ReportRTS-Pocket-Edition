@@ -1,0 +1,16 @@
+name: ReportRTS
+main: ProjectInfinity\ReportRTS\ReportRTS
+version: 1.0
+api: [1.0.0]
+author: ProjectInfinity
+commands:
+  ticket:
+    description: "General ticket cmd for ReportRTS"
+    usage: "/ticket <action> <arguments>"
+    permission: "reportrts.ticket"
+    aliases: [report]
+  reportrts:
+    description: "General ReportRTS management command"
+    usage: "/reportrts <action> <arguments>"
+    permission: "reportrts.rts"
+    aliases: [rts]
