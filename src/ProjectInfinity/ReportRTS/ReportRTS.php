@@ -15,6 +15,8 @@ class ReportRTS extends PluginBase {
     public $ticketNagHeld;
     public $ticketHideOffline;
 
+    public $commands;
+
     public $debug;
 
     public function onEnable() {
@@ -36,6 +38,19 @@ class ReportRTS extends PluginBase {
         $this->ticketNag = $this->getConfig()->get("ticket.nag");
         $this->ticketNagHeld = $this->getConfig()->get("ticket.nagHeld");
         $this->ticketHideOffline= $this->getConfig()->get("ticket.hideOffline");
+
+        # Command configuration.
+        $this->commands = array();
+        $this->commands['readTicket'] = $this->getConfig()->get("command.readTicket");
+        $this->commands['openTicket'] = $this->getConfig()->get("command.openTicket");
+        $this->commands['closeTicket'] = $this->getConfig()->get("command.closeTicket");
+        $this->commands['reopenTicket'] = $this->getConfig()->get("command.reopenTicket");
+        $this->commands['claimTicket'] = $this->getConfig()->get("command.claimTicket");
+        $this->commands['assignTicket'] = $this->getConfig()->get("command.assignTicket");
+        $this->commands['unclaimTicket'] = $this->getConfig()->get("command.unclaimTicket");
+        $this->commands['teleportToTicket'] = $this->getConfig()->get("command.teleportToTicket");
+        $this->commands['broadcastToStaff'] = $this->getConfig()->get("command.broadcastToStaff");
+        $this->commands['listStaff'] = $this->getConfig()->get("command.listStaff");
 
         # Shows debug information in the plugin if enabled.
         $this->debug = $this->getConfig()->get("debug");
