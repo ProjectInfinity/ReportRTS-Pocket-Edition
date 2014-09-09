@@ -4,6 +4,8 @@ namespace ProjectInfinity\ReportRTS;
 
 use pocketmine\plugin\PluginBase;
 
+use ProjectInfinity\ReportRTS\listener\RTSListener;
+
 class ReportRTS extends PluginBase {
 
     public $ticketMax;
@@ -15,7 +17,12 @@ class ReportRTS extends PluginBase {
     public $ticketNagHeld;
     public $ticketHideOffline;
 
+    # Array containing all configurable sub-commands.
     public $commands;
+    # Array containing all online staff members (users with reportrts.staff).
+    public $staff;
+    # Array containing all waiting notifications.
+    public $notifications;
 
     public $debug;
 
@@ -23,6 +30,9 @@ class ReportRTS extends PluginBase {
         $this->getLogger()->info("Welcome to the Alpha for ReportRTS. Please report any bugs you may discover to https://github.com/ProjectInfinity/ReportRTS/issues.
         This project is a large Bukkit project that is being ported to PocketMine.");
         $this->reloadSettings();
+
+        # Register event listeners.
+        $this->getServer()->getPluginManager()->registerEvents(new RTSListener($this), $this);
     }
 
     public function reloadSettings() {
@@ -51,6 +61,12 @@ class ReportRTS extends PluginBase {
         $this->commands['teleportToTicket'] = $this->getConfig()->get("command.teleportToTicket");
         $this->commands['broadcastToStaff'] = $this->getConfig()->get("command.broadcastToStaff");
         $this->commands['listStaff'] = $this->getConfig()->get("command.listStaff");
+
+        # Setup notification array.
+        $this->notifications = array();
+
+        # Setup staff array.
+        $this->staff = array();
 
         # Shows debug information in the plugin if enabled.
         $this->debug = $this->getConfig()->get("debug");
