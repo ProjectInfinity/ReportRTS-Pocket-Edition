@@ -5,6 +5,7 @@ namespace ProjectInfinity\ReportRTS\listener;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 
+use pocketmine\event\player\PlayerQuitEvent;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\PermissionHandler;
 
@@ -29,6 +30,13 @@ class RTSListener implements Listener {
         if($event->getPlayer()->hasPermission($this->ph->isStaff())) {
             array_push($this->plugin->staff, $event->getPlayer()->getName());
             array_unique($this->plugin->staff);
+        }
+    }
+
+    public function onPlayerQuit(PlayerQuitEvent $event) {
+        # TODO: This needs testing, if it works then remove this comment.
+        if(($staff = array_search($event->getPlayer()->getName(), $this->plugin->staff)) !== false) {
+            unset($$this->plugin->staff[$staff]);
         }
     }
 
