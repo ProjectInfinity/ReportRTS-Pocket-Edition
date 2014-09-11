@@ -1,22 +1,24 @@
-command.readTicket: "read"
-command.openTicket: "open"
-command.closeTicket: "close"
-command.reopenTicket: "reopen"
-command.claimTicket: "claim"
-command.assignTicket: "assign"
-command.unclaimTicket: "unclaim"
-command.holdTicket: "hold"
-command.teleportToTicket: "tp"
-command.broadcastToStaff: "broadcast"
-command.listStaff: "staff"
+command:
+  readTicket: "read"
+  openTicket: "open"
+  closeTicket: "close"
+  reopenTicket: "reopen"
+  claimTicket: "claim"
+  assignTicket: "assign"
+  unclaimTicket: "unclaim"
+  holdTicket: "hold"
+  teleportToTicket: "tp"
+  broadcastToStaff: "broadcast"
+  listStaff: "staff"
 
-ticket.delay: 60
-ticket.max: 5
-ticket.hideOffline: false
-ticket.perPage: 5
-ticket.preventDuplicates: true
-ticket.nag: 5
-ticket.nagHeld: false
-ticket.minimumWords: 3
+ticket:
+  delay: 60
+  max: 5
+  hideOffline: false
+  perPage: 5
+  preventDuplicates: true
+  nag: 5
+  nagHeld: false
+  minimumWords: 3
 
 debug: true
