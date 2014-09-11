@@ -1,0 +1,138 @@
+<?php
+
+namespace ProjectInfinity\ReportRTS\data;
+
+class Ticket {
+
+    private $id, $status, $x, $y, $z, $staffId, $yaw, $pitch, $timestamp, $stafftstamp, $text, $name, $world, $staffName, $comment;
+
+    public function __construct($id, $status, $x, $y, $z, $staffId, $yaw, $pitch, $timestamp, $stafftsstamp, $text, $name, $world, $staffName, $comment) {
+        $this->id = $id;
+        $this->status = $status;
+        $this->x = $x;
+        $this->y = $y;
+        $this->z = $z;
+        $this->staffId = $staffId;
+        $this->yaw = $yaw;
+        $this->pitch = $pitch;
+        $this->timestamp = $timestamp;
+        $this->stafftstamp = $stafftsstamp;
+        $this->text = $text;
+        $this->name = $name;
+        $this->world = $world;
+        $this->staffName = $staffName;
+        $this->$comment = $comment;
+    }
+
+    /**
+     * Returns the message of the ticket.
+     * @return String
+     */
+    public function getMessage() {
+        return $this->text;
+    }
+
+    /**
+     * Returns the name of the sender.
+     * @return String
+     */
+    public function getName() {
+        return $this->name;
+    }
+
+    /**
+     * Return the ID of the ticket.
+     * @return Integer
+     */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * Returns the ticket status.
+     * @return Integer
+     */
+    public function getStatus() {
+        return $this->status;
+    }
+
+    /**
+     * Returns the timestamp when the ticket was created.
+     * @return Long
+     */
+    public function getTimestamp() {
+        return $this->timestamp;
+    }
+
+    /**
+     * Returns the timestamp when the ticket was last interacted with by staff.
+     * @return Long
+     */
+    public function getStaffTimestamp() {
+        return $this->stafftstamp;
+    }
+
+    /**
+     * Returns X where the ticket was created.
+     * @return Long
+     */
+    public function getX() {
+        return $this->x;
+    }
+
+    /**
+     * Returns Y where the ticket was created.
+     * @return Long
+     */
+    public function getY() {
+        return $this->y;
+    }
+
+    /**
+     * Returns Z where the ticket was created.
+     * @return Long
+     */
+    public function getZ() {
+        return $this->z;
+    }
+
+    /**
+     * Returns Yaw where the ticket was created.
+     * @return Float
+     */
+    public function getYaw() {
+        return $this->yaw;
+    }
+
+    /**
+     * Returns Pitch where the ticket was created.
+     * @return Float
+     */
+    public function getPitch() {
+        return $this->pitch;
+    }
+
+    /**
+     * Returns the name of the world where the ticket was created.
+     * @return String
+     */
+    public function getWorld() {
+        return $this->world;
+    }
+
+    /**
+     * Returns the name of the staff that handled the ticket, if any.
+     * @return String
+     */
+    public function getStaffName() {
+        return $this->staffName;
+    }
+
+    /**
+     * Returns the comment that was made when handling the ticket, if any.
+     * @return String
+     */
+    public function getComment() {
+        return $this->comment;
+    }
+}
