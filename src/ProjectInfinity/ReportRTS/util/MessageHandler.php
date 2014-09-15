@@ -11,11 +11,24 @@ class MessageHandler {
     public static $generalError;
 
     public static function load() {
-        MessageHandler::$generalError = '%red%An error occurred. Reference: %s';
-        MessageHandler::$colors = (new \ReflectionClass(TextFormat::class))->getConstants();
+        self::$generalError = '%red%An error occurred. Reference: %s';
+        self::$colors = (new \ReflectionClass(TextFormat::class))->getConstants();
     }
 
+    /**
+     * Iterates the color array and replaces the color codes from the provided String.
+     * @param $message
+     * @return String
+     */
     private function parseColors($message) {
-        $message = str_replace("")
+
+        $msg = $message;
+        foreach(self::$colors as $color) {
+            $key = "%".strtolower($color)."%";
+            if(strpos($msg, $key) === true) {
+                $msg = str_replace($key, $color, $msg);
+            }
+        }
+        return $msg;
     }
 }
