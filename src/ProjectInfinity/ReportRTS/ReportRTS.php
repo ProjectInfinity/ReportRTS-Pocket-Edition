@@ -7,6 +7,7 @@ use pocketmine\plugin\PluginBase;
 use ProjectInfinity\ReportRTS\command\ReportRTSCommand;
 use ProjectInfinity\ReportRTS\command\TicketCommand;
 use ProjectInfinity\ReportRTS\listener\RTSListener;
+use ProjectInfinity\ReportRTS\util\MessageHandler;
 
 class ReportRTS extends PluginBase {
 
@@ -32,6 +33,9 @@ class ReportRTS extends PluginBase {
         $this->getLogger()->info("Welcome to the Alpha for ReportRTS. Please report any bugs you may discover to https://github.com/ProjectInfinity/ReportRTS/issues.
         This project is a large Bukkit project that is being ported to PocketMine.");
         $this->reloadSettings();
+
+        # Set up MessageHandler.
+        MessageHandler::load();
 
         # Register commands.
         $this->getCommand("ticket")->setExecutor(new TicketCommand($this));

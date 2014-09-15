@@ -1,7 +1,7 @@
 broadcastMessage: '%white%[%red%Staff%white%] %red%{0}: %green%{1}'
 
 generalPermissionError: '%yellow%You need permission to do that: {0}'
-generalInternalError: '%red%An error occurred. Reference: {0}'
+generalError: '%red%An error occurred. Reference: {0}'
 generalOpenTickets: '%green%There are {0} open tickets. Type /{1} to see them.'
 generalOpenHeldTicket: '%green%There are {0} open tickets and {1} tickets on hold. Type /{2} to see them.'
 generalNoTickets: '%white%There are no tickets at this time.'
