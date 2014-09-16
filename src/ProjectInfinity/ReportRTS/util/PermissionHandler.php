@@ -4,9 +4,8 @@ namespace ProjectInfinity\ReportRTS\util;
 
 class PermissionHandler {
 
-    private $isStaff = "reportrts.staff";
+    const isStaff = "reportrts.staff";
 
-    public function isStaff() {
-        return $this->isStaff;
-    }
+    const canReload = "reportrts.command.reload";
+
 }
