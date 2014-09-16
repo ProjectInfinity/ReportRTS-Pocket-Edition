@@ -20,6 +20,7 @@ class ReportRTSCommand implements CommandExecutor {
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
         if(count($args) == 0) return false;
 
+        # TODO: Add all missing logic.
         switch(strtoupper($args[0])) {
 
             case "RELOAD":
@@ -28,6 +29,35 @@ class ReportRTSCommand implements CommandExecutor {
                     return true;
                 }
                 $this->plugin->reloadSettings();
+                break;
+
+            case "BAN":
+
+                break;
+
+            case "UNBAN":
+
+                break;
+
+            case "RESET":
+
+                break;
+
+            case "STATS":
+
+                break;
+
+            case "FIND":
+            case "SEARCH":
+
+                break;
+
+            case "HELP":
+
+                break;
+
+            case "DUTY":
+
                 break;
 
             default:
