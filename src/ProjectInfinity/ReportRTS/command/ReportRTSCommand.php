@@ -7,6 +7,7 @@ use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
+use ProjectInfinity\ReportRTS\util\PermissionHandler;
 
 class ReportRTSCommand implements CommandExecutor {
 
@@ -21,6 +22,13 @@ class ReportRTSCommand implements CommandExecutor {
 
         switch(strtoupper($args[0])) {
 
+            case "RELOAD":
+                if(!$sender->hasPermission(PermissionHandler::canReload)) {
+                    $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canReload));
+                    return true;
+                }
+                $this->plugin->reloadSettings();
+                break;
 
             default:
                 $sender->sendMessage(MessageHandler::$generalError);
