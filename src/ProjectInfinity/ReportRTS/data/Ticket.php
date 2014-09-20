@@ -135,4 +135,69 @@ class Ticket {
     public function getComment() {
         return $this->comment;
     }
+
+    /**
+     * Sets the message of the ticket to $text.
+     * @param $text
+     */
+    public function setMessage($text) {
+        $this->text = $text;
+    }
+
+    /**
+     * Sets the provided name as the user that opened the ticket.
+     * @param $name
+     */
+    public function setName($name) {
+        $this->name = $name;
+    }
+
+    /**
+     * Sets the provided ID as the user that opened the ticket.
+     * @param $id
+     */
+    public function setId($id) {
+        $this->id = $id;
+    }
+
+    public function setStatus($status) {
+        $this->status = $status;
+    }
+
+    public function setTimestamp($timestamp) {
+        $this->timestamp = $timestamp;
+    }
+
+    public function setStaffTimestamp($staffTimestamp) {
+        $this->stafftstamp = $staffTimestamp;
+    }
+
+    public function setX($x) {
+        $this->x = $x;
+    }
+
+    public function setY($y) {
+        $this->y = $y;
+    }
+
+    public function setZ($z) {
+        $this->z = $z;
+    }
+
+    public function setYaw($yaw) {
+        $this->yaw = $yaw;
+    }
+
+    public function setPitch($pitch) {
+        $this->pitch = $pitch;
+    }
+
+    public function setWorld($world) {
+        $this->world = $world;
+    }
+
+    public function setComment($comment) {
+        $this->comment = $comment;
+    }
+
 }

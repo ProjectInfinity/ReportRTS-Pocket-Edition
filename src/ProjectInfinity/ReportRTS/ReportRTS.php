@@ -6,6 +6,7 @@ use pocketmine\plugin\PluginBase;
 
 use ProjectInfinity\ReportRTS\command\ReportRTSCommand;
 use ProjectInfinity\ReportRTS\command\TicketCommand;
+use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\listener\RTSListener;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
 
@@ -20,6 +21,8 @@ class ReportRTS extends PluginBase {
     public $ticketNagHeld;
     public $ticketHideOffline;
 
+    # Array containing all tickets.
+    public static $tickets;
     # Array containing all configurable sub-commands.
     public $commands;
     # Array containing all online staff members (users with reportrts.staff).
@@ -59,6 +62,10 @@ class ReportRTS extends PluginBase {
         $this->ticketNagHeld = $this->getConfig()->get("ticket")["nagHeld"];
         $this->ticketHideOffline= $this->getConfig()->get("ticket")["hideOffline"];
 
+        # Setup ticket array. NOTE: This contains fake tickets until a storage system has been developed.
+        self::$tickets = array();
+        self::$tickets[1] = new Ticket(1, 0, 50, 50, 50, 1, 20, 20, 200000, null, "This is the first test ticket.", "ProjectInfinity", "world", null, null);
+
         # Command configuration.
         $this->commands = array();
         $this->commands['readTicket'] = $this->getConfig()->get("command")["readTicket"];
@@ -80,5 +87,9 @@ class ReportRTS extends PluginBase {
 
         # Shows debug information in the plugin if enabled.
         $this->debug = $this->getConfig()->get("debug");
+    }
+
+    public static function getTickets() {
+        return self::$tickets;
     }
 }
