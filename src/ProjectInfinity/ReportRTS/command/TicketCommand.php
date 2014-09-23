@@ -5,6 +5,7 @@ namespace ProjectInfinity\ReportRTS\command;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
+use ProjectInfinity\ReportRTS\command\sub\ReadTicket;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\ToolBox;
 
@@ -12,8 +13,13 @@ class TicketCommand implements CommandExecutor {
 
     private $plugin;
 
+    private $readCommand;
+
     public function __construct(ReportRTS $plugin) {
         $this->plugin = $plugin;
+
+        # Set up sub-commands.
+        $this->readCommand = new ReadTicket($plugin);
     }
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
@@ -22,7 +28,7 @@ class TicketCommand implements CommandExecutor {
         $i = -1;
         foreach($args as $arg) {
         $i++;
-        $this->plugin->getLogger()->debug("Position: " . $i . " | Actual Position: " . ($i + 1) . " | Argument: " . $arg);
+        $this->plugin->getLogger()->info("Position: " . $i . " | Actual Position: " . ($i + 1) . " | Argument: " . $arg);
         }
         /** LOOK ABOVE **/
 
@@ -35,8 +41,8 @@ class TicketCommand implements CommandExecutor {
 
         /** Read ticket. **/
         if(strtoupper($args[0]) == $this->plugin->commands['readTicket']) {
-            if($this->plugin->debug) $this->plugin->getLogger()->debug($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)." ms ".$command->getName()." ".implode(" ", $args));
-            # TODO: $result = ReadTicket::handleCommand(); Static might be bad though... Java is not as sensitive in this area.
+            if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
+            $result = $this->readCommand->handleCommand($sender, $args);
         }
 
         return $result;
