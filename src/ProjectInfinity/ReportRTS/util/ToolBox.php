@@ -71,4 +71,17 @@ const DAY_MILLIS = 86400000; # 24 * HOUR_MILLIS;
         }
     }
 
+    /**
+     * Checks whether the provided String is a Integer or not
+     * and returns a boolean representing the result.
+     * @param $number
+     * @return bool
+     */
+    public static function isNumber($number) {
+        if(is_numeric($number)) $number = intval($number);
+        if(!is_int($number) || $number <= 0) {
+            return false;
+        }
+        return  true;
+    }
 }
