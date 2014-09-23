@@ -21,7 +21,7 @@ class Ticket {
         $this->name = $name;
         $this->world = $world;
         $this->staffName = $staffName;
-        $this->$comment = $comment;
+        $this->comment = $comment;
     }
 
     /**
