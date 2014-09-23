@@ -68,16 +68,16 @@ class ReportRTS extends PluginBase {
 
         # Command configuration.
         $this->commands = array();
-        $this->commands['readTicket'] = $this->getConfig()->get("command")["readTicket"];
-        $this->commands['openTicket'] = $this->getConfig()->get("command")["openTicket"];
-        $this->commands['closeTicket'] = $this->getConfig()->get("command")["closeTicket"];
-        $this->commands['reopenTicket'] = $this->getConfig()->get("command")["reopenTicket"];
-        $this->commands['claimTicket'] = $this->getConfig()->get("command")["claimTicket"];
-        $this->commands['assignTicket'] = $this->getConfig()->get("command")["assignTicket"];
-        $this->commands['unclaimTicket'] = $this->getConfig()->get("command")["unclaimTicket"];
-        $this->commands['teleportToTicket'] = $this->getConfig()->get("command")["teleportToTicket"];
-        $this->commands['broadcastToStaff'] = $this->getConfig()->get("command")["broadcastToStaff"];
-        $this->commands['listStaff'] = $this->getConfig()->get("command")["listStaff"];
+        $this->commands['readTicket'] = strtoupper($this->getConfig()->get("command")["readTicket"]);
+        $this->commands['openTicket'] = strtoupper($this->getConfig()->get("command")["openTicket"]);
+        $this->commands['closeTicket'] = strtoupper($this->getConfig()->get("command")["closeTicket"]);
+        $this->commands['reopenTicket'] = strtoupper($this->getConfig()->get("command")["reopenTicket"]);
+        $this->commands['claimTicket'] = strtoupper($this->getConfig()->get("command")["claimTicket"]);
+        $this->commands['assignTicket'] = strtoupper($this->getConfig()->get("command")["assignTicket"]);
+        $this->commands['unclaimTicket'] = strtoupper($this->getConfig()->get("command")["unclaimTicket"]);
+        $this->commands['teleportToTicket'] = strtoupper($this->getConfig()->get("command")["teleportToTicket"]);
+        $this->commands['broadcastToStaff'] = strtoupper($this->getConfig()->get("command")["broadcastToStaff"]);
+        $this->commands['listStaff'] = strtoupper($this->getConfig()->get("command")["listStaff"]);
 
         # Setup notification array.
         $this->notifications = array();
