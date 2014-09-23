@@ -12,9 +12,9 @@ class MessageHandler {
     public static $permissionError;
 
     public static function load() {
+        self::$colors = (new \ReflectionClass(TextFormat::class))->getConstants();
         self::$generalError = self::parseColors('%red%An error occurred. Reference: %s');
         self::$permissionError = self::parseColors('%yellow%You need permission %s to do that');
-        self::$colors = (new \ReflectionClass(TextFormat::class))->getConstants();
     }
 
     /**
@@ -22,12 +22,12 @@ class MessageHandler {
      * @param $message
      * @return String
      */
-    private function parseColors($message) {
+    private static function parseColors($message) {
         $msg = $message;
-        foreach(self::$colors as $color) {
+        foreach(self::$colors as $color => $value) {
             $key = "%".strtolower($color)."%";
-            if(strpos($msg, $key) === true) {
-                $msg = str_replace($key, $color, $msg);
+            if(strpos($msg, $key) !== false) {
+                $msg = str_replace($key, $value, $msg);
             }
         }
         return $msg;
