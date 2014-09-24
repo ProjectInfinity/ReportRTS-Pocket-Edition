@@ -2,8 +2,11 @@
 
 namespace ProjectInfinity\ReportRTS\command\sub;
 
+use pocketmine\command\CommandSender;
+use pocketmine\utils\TextFormat;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
+use ProjectInfinity\ReportRTS\util\PermissionHandler;
 use ProjectInfinity\ReportRTS\util\ToolBox;
 
 class ReadTicket {
@@ -13,7 +16,7 @@ class ReadTicket {
     public function __construct(ReportRTS $plugin) {
         $this->plugin = $plugin;
     }
-    public function handleCommand($sender, $args) {
+    public function handleCommand(CommandSender $sender, $args) {
 
         # Not enough arguments to be anything but "/ticket read".
         if(count($args) < 2) {
@@ -48,7 +51,28 @@ class ReadTicket {
         }
     }
 
-    private function viewPage($sender, $page) {}
+    /**
+     * View the specified page. Defaults to 1.
+     * @param CommandSender $sender
+     * @param $page
+     * @return bool
+     */
+    private function viewPage(CommandSender $sender, $page) {
+
+        if(!PermissionHandler::canReadAll) {
+            $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::isStaff));
+            return true;
+        }
+
+        if($page < 0) $page = 1;
+
+        # Compile a response to the user.
+        $sender->sendMessage(TextFormat::AQUA."--------- ".count($this->plugin->getTickets())." Tickets -".TextFormat::YELLOW." Open ".TextFormat::AQUA."---------");
+        if(count($this->plugin->getTickets()) == 0) $sender->sendMessage(MessageHandler::$noTickets);
+
+        # TODO: Port pagination.
+
+    }
     private function viewHeld($sender, $page) {}
     private function viewClosed($sender, $page) {}
     private function viewSelf($sender) {}

@@ -7,5 +7,6 @@ class PermissionHandler {
     const isStaff = "reportrts.staff";
 
     const canReload = "reportrts.command.reload";
+    const canReadAll = "reportrts.command.read";
 
 }

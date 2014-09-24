@@ -11,10 +11,13 @@ class MessageHandler {
     public static $generalError;
     public static $permissionError;
 
+    public static $noTickets;
+
     public static function load() {
         self::$colors = (new \ReflectionClass(TextFormat::class))->getConstants();
         self::$generalError = self::parseColors('%red%An error occurred. Reference: %s');
-        self::$permissionError = self::parseColors('%yellow%You need permission %s to do that');
+        self::$permissionError = self::parseColors('%yellow%You need permission "%s" to do that');
+        self::$noTickets = self::parseColors('%white%There are no tickets at this time.');
     }
 
     /**
