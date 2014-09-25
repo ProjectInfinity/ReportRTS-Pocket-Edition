@@ -63,7 +63,6 @@ class ReportRTS extends PluginBase {
         $this->ticketHideOffline= $this->getConfig()->get("ticket")["hideOffline"];
 
         # Setup ticket array. NOTE: This contains fake tickets until a storage system has been developed.
-        unset(self::$tickets);
         self::$tickets = array();
         self::$tickets[1] = new Ticket(1, 0, 50, 50, 50, 1, 20, 20, 200000, null, "This is the first test ticket.", "ProjectInfinity", "world", null, null);
 
