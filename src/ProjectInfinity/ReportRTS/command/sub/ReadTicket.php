@@ -21,7 +21,6 @@ class ReadTicket {
 
         # Not enough arguments to be anything but "/ticket read".
         if(count($args) < 2) {
-            echo "less than 2 arguments";
             return $this->viewPage($sender, 1);
         }
 
