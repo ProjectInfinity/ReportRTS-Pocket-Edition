@@ -8,6 +8,7 @@ use ProjectInfinity\ReportRTS\command\ReportRTSCommand;
 use ProjectInfinity\ReportRTS\command\TicketCommand;
 use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\listener\RTSListener;
+use ProjectInfinity\ReportRTS\persistence\DataProvider;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
 
 class ReportRTS extends PluginBase {
@@ -31,6 +32,9 @@ class ReportRTS extends PluginBase {
     public $notifications;
 
     public $debug;
+
+    /** @var  DataProvider */
+    protected $provider;
 
     public function onEnable() {
         $this->getLogger()->info("Welcome to the Alpha for ReportRTS. Please report any bugs you may discover to https://github.com/ProjectInfinity/ReportRTS-Pocket-Edition/issues.
@@ -91,10 +95,18 @@ class ReportRTS extends PluginBase {
         $this->debug = $this->getConfig()->get("debug");
     }
 
-    /**
-     * @return Array
-     */
+    /** @return Array */
     public static function getTickets() {
         return self::$tickets;
+    }
+
+    /** @param DataProvider $provider */
+    public function setDataProvider(DataProvider $provider) {
+        $this->provider = $provider;
+    }
+
+    /** @return DataProvider */
+    public function getDataProvider() {
+        return $this->provider;
     }
 }

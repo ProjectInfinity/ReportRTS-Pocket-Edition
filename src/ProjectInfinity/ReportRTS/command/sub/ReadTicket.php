@@ -2,6 +2,7 @@
 
 namespace ProjectInfinity\ReportRTS\command\sub;
 
+use Exception;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 use ProjectInfinity\ReportRTS\data\Ticket;
@@ -96,7 +97,26 @@ class ReadTicket {
         }
         return true;
     }
-    private function viewHeld($sender, $page) {}
+
+    private function viewHeld(CommandSender $sender, $page) {
+
+        if(!PermissionHandler::canReadAll) {
+            $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canReadAll));
+            return true;
+        }
+
+        # Set cursor start position.
+        $i = ($page * $this->plugin->ticketPerPage) - $this->plugin->ticketPerPage;
+
+        try {
+            # TODO: Database manager has to be created in order to continue!
+        } catch(Exception $e) {
+            $sender->sendMessage(sprintf(MessageHandler::$generalError, "Cannot read held tickets, check the console for errors."));
+            $this->plugin->getLogger()->error($e->getMessage());
+            $this->plugin->getLogger()->error("Line: ".$e->getLine()." in ".$e->getFile());
+        }
+        return true;
+    }
     private function viewClosed($sender, $page) {}
     private function viewSelf($sender) {}
     private function viewId($sender, $id) {}
