@@ -13,7 +13,17 @@ interface DataProvider {
 
     public function createUser($username);
 
-    public function getUserId($username);
+    public function countHeldTickets();
+    public function countTickets();
 
-    # Add more functions as documented in SQLDB.java from line 103.
+    public function getUserId($username);
+    public function getLastIdBy($username);
+
+    public function setTicketStatus($id, $username, $status, $comment, $notified, $timestamp);
+    public function setUserStatus($username, $status);
+
+    public function populateTicketArray();
+
+    public function openTicket();
+    # Add more functions as documented in SQLDB.java from line 383.
 }
