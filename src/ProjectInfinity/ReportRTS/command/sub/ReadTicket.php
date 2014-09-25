@@ -3,7 +3,9 @@
 namespace ProjectInfinity\ReportRTS\command\sub;
 
 use pocketmine\command\CommandSender;
+use pocketmine\item\Tool;
 use pocketmine\utils\TextFormat;
+use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
 use ProjectInfinity\ReportRTS\util\PermissionHandler;
@@ -65,13 +67,32 @@ class ReadTicket {
         }
 
         if($page < 0) $page = 1;
+        $a = $page * $this->plugin->ticketPerPage;
 
         # Compile a response to the user.
         $sender->sendMessage(TextFormat::AQUA."--------- ".count($this->plugin->getTickets())." Tickets -".TextFormat::YELLOW." Open ".TextFormat::AQUA."---------");
         if(count($this->plugin->getTickets()) == 0) $sender->sendMessage(MessageHandler::$noTickets);
 
-        # TODO: Port pagination.
+        # (page * ticketPerPage) - ticketPerPage = Sets the start location of the "cursor".
+        for($i = ($page * $this->plugin->ticketPerPage) - $this->plugin->ticketPerPage; $i < $a && $i < count($this->plugin->getTickets()); $i++) {
+            /* @var $ticket Ticket */
+            if($i < 0) $i = 1;
+            $ticket = $this->plugin->getTickets()[$i];
 
+            # Check if plugin hides tickets from offline players and if the player is offline.
+            if($this->plugin->ticketHideOffline && !ToolBox::isOnline($sender->getName())) {
+                $a++;
+                continue;
+            }
+
+            $substring = ToolBox::shortenMessage($ticket->getMessage());
+            # If the ticket is claimed, we should specify so by altering the text and colour of it.
+            $substring = ($ticket->getStatus() == 1) ? TextFormat::LIGHT_PURPLE."Claimed by ".$ticket->getStaffName() : TextFormat::GRAY.$substring;
+            # Send final message.
+            $sender->sendMessage(TextFormat::GOLD."#".$ticket->getId()." ".ToolBox::timeSince($ticket->getTimestamp())." by ".
+                (ToolBox::isOnline($ticket->getName()) ? TextFormat::GREEN : TextFormat::RED).$ticket->getName().TextFormat::GOLD." - ".$substring);
+        }
+        return true;
     }
     private function viewHeld($sender, $page) {}
     private function viewClosed($sender, $page) {}

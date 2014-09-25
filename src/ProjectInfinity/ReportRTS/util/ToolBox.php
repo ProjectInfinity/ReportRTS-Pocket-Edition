@@ -2,6 +2,7 @@
 
 namespace ProjectInfinity\ReportRTS\util;
 
+use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use ProjectInfinity\ReportRTS\ReportRTS;
 
@@ -83,5 +84,30 @@ const DAY_MILLIS = 86400000; # 24 * HOUR_MILLIS;
             return false;
         }
         return  true;
+    }
+
+    /**
+     * Checks if a user with the provided name is online.
+     * @param $name
+     * @return bool
+     */
+    public static function isOnline($name) {
+        foreach(Server::getInstance()->getOnlinePlayers() as $player) {
+            if($player->getName() == $name) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns a shortened String in the event that the provided
+     * String is above 20 characters long.
+     * @param $message
+     * @return string
+     */
+    public static function shortenMessage($message) {
+        if(strlen($message) >= 20) {
+            $message = substr($message, 0, 20)."...";
+        }
+        return $message;
     }
 }

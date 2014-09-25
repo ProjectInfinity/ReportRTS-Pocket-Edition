@@ -22,7 +22,7 @@ class ReportRTS extends PluginBase {
     public $ticketHideOffline;
 
     # Array containing all tickets.
-    public static $tickets;
+    public static $tickets = array();
     # Array containing all configurable sub-commands.
     public $commands;
     # Array containing all online staff members (users with reportrts.staff).
@@ -63,6 +63,7 @@ class ReportRTS extends PluginBase {
         $this->ticketHideOffline= $this->getConfig()->get("ticket")["hideOffline"];
 
         # Setup ticket array. NOTE: This contains fake tickets until a storage system has been developed.
+        unset(self::$tickets);
         self::$tickets = array();
         self::$tickets[1] = new Ticket(1, 0, 50, 50, 50, 1, 20, 20, 200000, null, "This is the first test ticket.", "ProjectInfinity", "world", null, null);
 
@@ -89,6 +90,9 @@ class ReportRTS extends PluginBase {
         $this->debug = $this->getConfig()->get("debug");
     }
 
+    /**
+     * @return Array
+     */
     public static function getTickets() {
         return self::$tickets;
     }
