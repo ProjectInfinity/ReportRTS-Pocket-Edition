@@ -49,6 +49,7 @@ class ReadTicket {
                 $sender->sendMessage(sprintf(MessageHandler::$generalError, "No valid action specified."));
                 break;
         }
+        return true;
     }
 
     /**
