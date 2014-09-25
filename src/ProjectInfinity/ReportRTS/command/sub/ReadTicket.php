@@ -66,7 +66,6 @@ class ReadTicket {
 
         if($page < 0) $page = 1;
         $a = $page * $this->plugin->ticketPerPage;
-
         # Compile a response to the user.
         $sender->sendMessage(TextFormat::AQUA."--------- ".count($this->plugin->getTickets())." Tickets -".TextFormat::YELLOW." Open ".TextFormat::AQUA."---------");
         if(count($this->plugin->getTickets()) == 0) $sender->sendMessage(MessageHandler::$noTickets);
@@ -75,8 +74,12 @@ class ReadTicket {
         for($i = ($page * $this->plugin->ticketPerPage) - $this->plugin->ticketPerPage; $i < $a && $i < count($this->plugin->getTickets()); $i++) {
             /* @var $ticket Ticket */
             if($i < 0) $i = 1;
-            $ticket = $this->plugin->getTickets()[$i];
+            $ticket = array_values($this->plugin->getTickets())[$i];
 
+            if($ticket == null) {
+                $sender->sendMessage(sprintf(MessageHandler::$generalError, "Ticket object is NULL!"));
+                continue;
+            }
             # Check if plugin hides tickets from offline players and if the player is offline.
             if($this->plugin->ticketHideOffline && !ToolBox::isOnline($sender->getName())) {
                 $a++;
