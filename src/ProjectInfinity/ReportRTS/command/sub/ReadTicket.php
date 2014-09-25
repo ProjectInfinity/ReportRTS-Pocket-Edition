@@ -3,7 +3,6 @@
 namespace ProjectInfinity\ReportRTS\command\sub;
 
 use pocketmine\command\CommandSender;
-use pocketmine\item\Tool;
 use pocketmine\utils\TextFormat;
 use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\ReportRTS;
