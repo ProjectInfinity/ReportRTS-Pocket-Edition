@@ -9,6 +9,7 @@ use ProjectInfinity\ReportRTS\command\TicketCommand;
 use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\listener\RTSListener;
 use ProjectInfinity\ReportRTS\persistence\DataProvider;
+use ProjectInfinity\ReportRTS\persistence\MySQLDataProvider;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
 
 class ReportRTS extends PluginBase {
@@ -56,6 +57,9 @@ class ReportRTS extends PluginBase {
         $this->saveDefaultConfig();
         $this->reloadConfig();
 
+        # Shows debug information in the plugin if enabled.
+        $this->debug = $this->getConfig()->get("debug");
+
         # Ticket configuration.
         $this->ticketMax = $this->getConfig()->get("ticket")["max"];
         $this->ticketDelay = $this->getConfig()->get("ticket")["delay"];
@@ -66,7 +70,26 @@ class ReportRTS extends PluginBase {
         $this->ticketNagHeld = $this->getConfig()->get("ticket")["nagHeld"];
         $this->ticketHideOffline= $this->getConfig()->get("ticket")["hideOffline"];
 
-        # Setup ticket array. NOTE: This contains fake tickets until a storage system has been developed.
+        # Set up storage.
+        $provider = $this->getConfig()->get("storage")["type"];
+        unset($this->provider);
+        switch(strtoupper($provider)) {
+
+            case "MYSQL":
+                if($this->debug) $this->getLogger()->info("Using MySQL data provider.");
+                $provider = new MySQLDataProvider($this);
+                break;
+
+            default:
+                # TODO: Handle if no matched storage type is found.
+                break;
+        }
+
+        if(!isset($this->provider) or !($this->provider instanceof DataProvider)) {
+            $this->provider = $provider;
+        }
+
+        # Set up ticket array. NOTE: This contains fake tickets until a storage system has been developed.
         self::$tickets = array();
         self::$tickets[1] = new Ticket(1, 0, 50, 50, 50, 1, 20, 20, 200000, null, "This is the first test ticket.", "ProjectInfinity", "world", null, null);
         # Make sure the array is sorted correctly, later this should be done after loading all data from a database.
@@ -91,8 +114,6 @@ class ReportRTS extends PluginBase {
         # Setup staff array.
         $this->staff = array();
 
-        # Shows debug information in the plugin if enabled.
-        $this->debug = $this->getConfig()->get("debug");
     }
 
     /** @return Array */
