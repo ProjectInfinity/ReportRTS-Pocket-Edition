@@ -30,8 +30,13 @@ class MySQLDataProvider implements DataProvider {
             return;
         }
 
+        # Set up tickets table.
         $resource = $this->plugin->getResource("mysql_tickets.sql");
         $this->database->query(stream_get_contents($resource));
+        # Set up users table.
+        $resource = $this->plugin->getResource("mysql_users.sql");
+        $this->database->query(stream_get_contents($resource));
+
         # Make sure connection stays alive.
         $this->plugin->getServer()->getScheduler()->scheduleRepeatingTask(new MySQLKeepAliveTask($this->plugin, $this->database), 600);
 
