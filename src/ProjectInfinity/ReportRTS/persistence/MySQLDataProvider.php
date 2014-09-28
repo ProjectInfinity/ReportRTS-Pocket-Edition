@@ -43,14 +43,21 @@ class MySQLDataProvider implements DataProvider {
         $this->plugin->getLogger()->info("Connected using MySQL");
     }
 
-    public function close()
-    {
-        // TODO: Implement close() method.
+    public function close() {
+        $this->database->close();
     }
 
-    public function createUser($username)
-    {
-        // TODO: Implement createUser() method.
+    public function createUser($username) {
+        $id = 0;
+        if(strtolower($username) == "console") {
+            # TODO: Add CONSOLE stuff here.
+        }
+        $player = $this->plugin->getServer()->getPlayer($username);
+        if($player == null) return 0;
+        $sql = $this->database->prepare("INSERT INTO `reportrts_users` (`name`, `banned`) VALUES (?, '0')");
+        $sql->bind_param("s", $username);
+        $sql->execute();
+        $sql->close();
     }
 
     public function createTicket($staffId, $world, $x, $y, $z, $message, $userId, $timestamp)
