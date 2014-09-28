@@ -53,6 +53,11 @@ class ReportRTS extends PluginBase {
         $this->getServer()->getPluginManager()->registerEvents(new RTSListener($this), $this);
     }
 
+    public function onDisable() {
+        # Close data provider connection.
+        $this->provider->close();
+    }
+
     public function reloadSettings() {
         $this->saveDefaultConfig();
         $this->reloadConfig();
