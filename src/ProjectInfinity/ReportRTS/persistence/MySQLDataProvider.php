@@ -90,9 +90,33 @@ class MySQLDataProvider implements DataProvider {
         // TODO: Implement getLastIdBy() method.
     }
 
-    public function getTickets($cursor, $limit, $status)
-    {
-        // TODO: Implement getTickets() method.
+    public function getTickets($cursor, $limit, $status = 0) {
+
+        $result = null;
+
+        switch($status) {
+
+            # Ticket is unresolved.
+            case 0:
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.id = user.id WHERE ticket.status = '0' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
+                break;
+
+            # Ticket is claimed.
+            case 1:
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.id = user.id WHERE ticket.status = '1' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
+                break;
+
+            # Ticket is on hold.
+            case 2:
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.id = user.id WHERE ticket.status = '2' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
+                break;
+
+            # Ticket is closed.
+            case 3:
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.id = user.id WHERE ticket.status = '3' ORDER BY ticket.id DESC LIMIT ".$cursor.",".$limit);
+                break;
+        }
+        return $result;
     }
 
     public function getTicketById($id)

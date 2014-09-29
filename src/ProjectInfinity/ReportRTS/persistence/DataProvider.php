@@ -14,6 +14,7 @@ interface DataProvider {
     public function createUser($username);
     public function createTicket($staffId, $world, $x, $y, $z, $message, $userId, $timestamp);
 
+    /** @returns Integer */
     public function countHeldTickets();
     public function countTickets();
 
@@ -21,7 +22,14 @@ interface DataProvider {
 
     public function getUserId($username);
     public function getLastIdBy($username);
-    public function getTickets($cursor, $limit, $status);
+
+    /**
+     * @param int $cursor
+     * @param int $limit
+     * @param int $status
+     * @returns \mysqli_result
+     */
+    public function getTickets($cursor, $limit, $status = 0);
     public function getTicketById($id);
     public function getLocation($id);
     public function getUnnotifiedUsers();
