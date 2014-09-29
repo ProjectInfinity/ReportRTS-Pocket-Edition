@@ -65,9 +65,8 @@ class MySQLDataProvider implements DataProvider {
         // TODO: Implement createTicket() method.
     }
 
-    public function countHeldTickets()
-    {
-        // TODO: Implement countHeldTickets() method.
+    public function countHeldTickets() {
+        return 0;
     }
 
     public function countTickets()

@@ -14,9 +14,11 @@ use ProjectInfinity\ReportRTS\util\ToolBox;
 class ReadTicket {
 
     private $plugin;
+    private $data;
 
     public function __construct(ReportRTS $plugin) {
         $this->plugin = $plugin;
+        $this->data = $plugin->getDataProvider();
     }
     public function handleCommand(CommandSender $sender, $args) {
 
@@ -107,13 +109,35 @@ class ReadTicket {
 
         # Set cursor start position.
         $i = ($page * $this->plugin->ticketPerPage) - $this->plugin->ticketPerPage;
+        $heldCount = 0;
 
+        $result = null;
         try {
-            # TODO: Database manager has to be created in order to continue!
+            $heldCount = $this->data->countHeldTickets();
+            $data = $this->data->getTickets($i, $this->plugin->ticketPerPage, 2);
+            $result = $data->fetch_assoc();
+            $data->close();
+
         } catch(Exception $e) {
             $sender->sendMessage(sprintf(MessageHandler::$generalError, "Cannot read held tickets, check the console for errors."));
             $this->plugin->getLogger()->error($e->getMessage());
             $this->plugin->getLogger()->error("Line: ".$e->getLine()." in ".$e->getFile());
+        }
+
+        $sender->sendMessage(TextFormat::AQUA."--------- ".$heldCount." Tickets -".TextFormat::YELLOW." Held ".TextFormat::AQUA."---------");
+        if($heldCount == 0) {
+            $sender->sendMessage(MessageHandler::$holdNoTickets);
+            return true;
+        }
+
+        # Loop tickets if any.
+        while($row = $result) {
+            $online = ToolBox::isOnline($result['name']) ? TextFormat::GREEN : TextFormat::RED;
+            $substring = ToolBox::shortenMessage($result['text']);
+
+
+            # TODO: Test below later when all required classes have been made.
+            $sender->sendMessage(TextFormat::GOLD."#".$result['id']." ".date("d-m-Y h:i:s", $row['timestamp'])." by ".$online.$result['name'].TextFormat::GOLD." - ".TextFormat::GRAY.$substring);
         }
         return true;
     }
