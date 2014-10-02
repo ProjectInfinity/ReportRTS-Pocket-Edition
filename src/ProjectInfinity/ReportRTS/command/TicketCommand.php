@@ -5,6 +5,7 @@ namespace ProjectInfinity\ReportRTS\command;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
+use ProjectInfinity\ReportRTS\command\sub\OpenTicket;
 use ProjectInfinity\ReportRTS\command\sub\ReadTicket;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\ToolBox;
@@ -14,12 +15,14 @@ class TicketCommand implements CommandExecutor {
     private $plugin;
 
     private $readCommand;
+    private $openCommand;
 
     public function __construct(ReportRTS $plugin) {
         $this->plugin = $plugin;
 
         # Set up sub-commands.
         $this->readCommand = new ReadTicket($plugin);
+        $this->openCommand = new OpenTicket($plugin);
     }
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
@@ -43,6 +46,11 @@ class TicketCommand implements CommandExecutor {
         if(strtoupper($args[0]) == $this->plugin->commands['readTicket']) {
             if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
             $result = $this->readCommand->handleCommand($sender, $args);
+        }
+        /** Open a ticket. */
+        if(strtoupper($args[0]) == $this->plugin->commands['openTicket']) {
+            if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
+            $result = $this->openCommand->handleCommand($sender, $args);
         }
 
         return $result;

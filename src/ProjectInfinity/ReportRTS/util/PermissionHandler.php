@@ -8,5 +8,6 @@ class PermissionHandler {
 
     const canReload = "reportrts.command.reload";
     const canReadAll = "reportrts.command.read";
+    const canOpenTicket = "reportrts.command.open";
 
 }
