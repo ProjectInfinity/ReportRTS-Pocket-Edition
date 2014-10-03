@@ -29,6 +29,12 @@ class OpenTicket {
         }
 
         # TODO: Continue where it left off. OpenTicket.java#L44
+
+        # Check if ticket message is too short.
+        if($this->plugin->ticketMinWords > (count($args) - 1)) {
+            $sender->sendMessage(sprintf(MessageHandler::$ticketTooShort, $this->plugin->ticketMinWords));
+            return true;
+        }
         return true;
     }
 
