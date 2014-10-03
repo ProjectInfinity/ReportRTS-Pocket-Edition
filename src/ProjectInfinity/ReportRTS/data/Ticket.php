@@ -58,7 +58,7 @@ class Ticket {
 
     /**
      * Returns the timestamp when the ticket was created.
-     * @return Long
+     * @return Float
      */
     public function getTimestamp() {
         return $this->timestamp;
@@ -66,7 +66,7 @@ class Ticket {
 
     /**
      * Returns the timestamp when the ticket was last interacted with by staff.
-     * @return Long
+     * @return Float
      */
     public function getStaffTimestamp() {
         return $this->stafftstamp;
@@ -74,7 +74,7 @@ class Ticket {
 
     /**
      * Returns X where the ticket was created.
-     * @return Long
+     * @return Float
      */
     public function getX() {
         return $this->x;
@@ -82,7 +82,7 @@ class Ticket {
 
     /**
      * Returns Y where the ticket was created.
-     * @return Long
+     * @return Float
      */
     public function getY() {
         return $this->y;
@@ -90,7 +90,7 @@ class Ticket {
 
     /**
      * Returns Z where the ticket was created.
-     * @return Long
+     * @return Float
      */
     public function getZ() {
         return $this->z;
