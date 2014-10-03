@@ -58,6 +58,7 @@ class MySQLDataProvider implements DataProvider {
         $sql->bind_param("s", $username);
         $sql->execute();
         $sql->close();
+        return $id;
     }
 
     public function createTicket($staffId, $world, $x, $y, $z, $message, $userId, $timestamp)
@@ -191,5 +192,26 @@ class MySQLDataProvider implements DataProvider {
     public function openTicket()
     {
         // TODO: Implement openTicket() method.
+    }
+
+    /**
+     * @param $username
+     * @return Array
+     */
+    public function getUser($username) {
+        $sql = $this->database->prepare("SELECT * FROM `reportrts_users` WHERE `name` = ? LIMIT 1");
+        $sql->bind_param("s", $username);
+        $sql->execute();
+        $sql->bind_result($id, $name, $banned);
+        $sql->fetch();
+
+        $array = [
+            "id" => (int) $id,
+            "username" => $name,
+            "isBanned" => ($banned == 1) ? true : false
+        ];
+
+        $sql->close();
+        return $array;
     }
 }
