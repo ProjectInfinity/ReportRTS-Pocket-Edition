@@ -16,6 +16,7 @@ class MessageHandler {
     public static $holdNoTickets;
 
     public static $ticketTooShort;
+    public static $ticketTooMany;
 
     public static function load() {
         self::$colors = (new \ReflectionClass(TextFormat::class))->getConstants();
@@ -24,6 +25,7 @@ class MessageHandler {
         self::$noTickets = self::parseColors('%white%There are no tickets at this time.');
         self::$holdNoTickets = self::parseColors('%gold%There are no tickets on hold right now.');
         self::$ticketTooShort = self::parseColors('%red%Your ticket needs to contain at least $s words.');
+        self::$ticketTooMany = self::parseColors('%red%You have too many open tickets, please wait before opening more.');
     }
 
     /**
