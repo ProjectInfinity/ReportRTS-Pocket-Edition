@@ -110,4 +110,22 @@ const DAY_MILLIS = 86400000; # 24 * HOUR_MILLIS;
         }
         return $message;
     }
+
+    /**
+     * Checks if the provided user has a open ticket with a timestamp
+     * higher than the current time minus the ticket delay.
+     * @param $username
+     * @param $delay
+     * @return Float|int
+     */
+    public static function timeDifference($username, $delay) {
+        foreach(ReportRTS::$tickets as $ticket) {
+            if($ticket->getName() == $username) {
+                if($ticket->getTimestamp() > (microtime(true) - $delay)) {
+                    return round($ticket->getTimestamp() - ((microtime(true) - $delay)));
+                }
+            }
+        }
+        return 0;
+    }
 }
