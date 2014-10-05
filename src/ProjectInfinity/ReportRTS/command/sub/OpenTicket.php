@@ -76,6 +76,12 @@ class OpenTicket {
                 return true;
             }
         }
+
+        # TODO: Add openTicket function here.
+        if($this->data->createTicket(null, $location->getLevel()->getName(), $location, $message, $userId, round(microtime(true) * 1000)) == 0) {
+            $sender->sendMessage(sprintf(MessageHandler::$generalError, "Could not open ticket."));
+            return true;
+        }
         return true;
     }
 

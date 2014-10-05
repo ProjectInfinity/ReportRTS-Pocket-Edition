@@ -2,6 +2,7 @@
 
 namespace ProjectInfinity\ReportRTS\persistence;
 
+use pocketmine\level\Position;
 use ProjectInfinity\ReportRTS\ReportRTS;
 
 interface DataProvider {
@@ -12,7 +13,17 @@ interface DataProvider {
     public function close();
 
     public function createUser($username);
-    public function createTicket($staffId, $world, $x, $y, $z, $message, $userId, $timestamp);
+
+    /**
+     * @param $staffId
+     * @param $world
+     * @param Position $location
+     * @param $message
+     * @param $userId
+     * @param $timestamp
+     * @return mixed
+     */
+    public function createTicket($staffId, $world, $location, $message, $userId, $timestamp);
 
     /** @returns Integer */
     public function countHeldTickets();
