@@ -64,8 +64,18 @@ class OpenTicket {
             $location = $sender->getPosition();
         }
 
-        # TODO: Continue at OpenTicket.java#L79
+        $args[0] = null;
+        $message = implode(" ", array_filter($args));
 
+        if($this->plugin->ticketPreventDuplicates) {
+            # TODO: Make this percentage based?
+            foreach(ReportRTS::$tickets as $ticket) {
+                if(strtolower($ticket->getName()) != strtolower($sender->getName())) continue;
+                if(strtolower($ticket->getMessage()) != strtolower($message)) continue;
+                $sender->sendMessage(MessageHandler::$ticketDuplicate);
+                return true;
+            }
+        }
         return true;
     }
 
