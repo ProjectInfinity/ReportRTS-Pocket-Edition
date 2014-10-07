@@ -21,6 +21,7 @@ class MessageHandler {
     public static $ticketDuplicate;
     public static $ticketOpenedUser;
     public static $ticketOpenedStaff;
+    public static $ticketNotOpen;
 
     public static function load() {
         self::$colors = (new \ReflectionClass(TextFormat::class))->getConstants();
@@ -34,6 +35,7 @@ class MessageHandler {
         self::$ticketDuplicate = self::parseColors('%red%Your ticket has not been opened because it was detected as a duplicate.');
         self::$ticketOpenedUser = self::parseColors('%gold%You opened a ticket. A staff member should be with you soon.');
         self::$ticketOpenedStaff = self::parseColors('%green%A new ticket has been opened by %s, id assigned #%u.');
+        self::$ticketNotOpen = self::parseColors('%red%Specified ticket is not open.');
     }
 
     /**

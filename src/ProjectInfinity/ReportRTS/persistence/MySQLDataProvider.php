@@ -180,9 +180,9 @@ class MySQLDataProvider implements DataProvider {
         // TODO: Implement getUsername() method.
     }
 
-    public function setTicketStatus($id, $username, $status, $comment, $notified, $timestamp)
-    {
+    public function setTicketStatus($id, $username, $status, $comment, $notified, $timestamp) {
         // TODO: Implement setTicketStatus() method.
+
     }
 
     public function setNotificationStatus($id, $status)
