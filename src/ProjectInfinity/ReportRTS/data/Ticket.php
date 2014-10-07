@@ -6,7 +6,7 @@ class Ticket {
 
     private $id, $status, $x, $y, $z, $staffId, $yaw, $pitch, $timestamp, $stafftstamp, $text, $name, $world, $staffName, $comment;
 
-    public function __construct($id, $status, $x, $y, $z, $staffId, $yaw, $pitch, $timestamp, $stafftsstamp, $text, $name, $world, $staffName, $comment) {
+    public function __construct($id, $status, $x, $y, $z, $staffId = null, $yaw, $pitch, $timestamp, $stafftsstamp = null, $text, $name, $world, $staffName = null, $comment = null) {
         $this->id = $id;
         $this->status = $status;
         $this->x = $x;

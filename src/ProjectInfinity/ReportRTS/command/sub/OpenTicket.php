@@ -4,6 +4,7 @@ namespace ProjectInfinity\ReportRTS\command\sub;
 
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
+use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
 use ProjectInfinity\ReportRTS\util\PermissionHandler;
@@ -78,8 +79,8 @@ class OpenTicket {
             }
         }
 
-        # TODO: Add openTicket function here.
-        $ticketId = $this->data->createTicket($sender->getName(), null, $location->getLevel()->getName(), $location, $yaw, $pitch, $message, round(microtime(true) * 1000));
+        $timestamp = round(microtime(true) * 1000);
+        $ticketId = $this->data->createTicket($sender->getName(), $location->getLevel()->getName(), $location, $yaw, $pitch, $message, $timestamp);
 
         if($ticketId <= 0) {
             # Something went wrong. Let's see if they are banned.
@@ -91,9 +92,14 @@ class OpenTicket {
             return true;
         }
 
-        # TODO: Add messaging.
+        $sender->sendMessage(MessageHandler::$ticketOpenedUser);
+        $this->plugin->getLogger()->info($sender->getName()." opened a ticket with the ID #".$ticketId.".");
+
+        # TODO: Add ToolBox::messageStaff
+
+        array_push(ReportRTS::$tickets, new Ticket($ticketId, 0, $location->getX(), $location->getY(), $location->getZ(), null,
+            $yaw, $pitch, $timestamp, null, $message, $sender->getName(), $location->getLevel()->getName(), null, null));
 
         return true;
     }
-
 }

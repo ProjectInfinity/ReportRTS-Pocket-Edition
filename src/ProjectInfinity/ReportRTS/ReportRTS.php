@@ -97,11 +97,7 @@ class ReportRTS extends PluginBase {
 
         # Set up ticket array. NOTE: This contains fake tickets until a storage system has been developed.
         self::$tickets = array();
-        self::$tickets[1] = new Ticket(1, 0, 50, 50, 50, 1, 20, 20, 200000, null, "This is the first test ticket.", "CONSOLE", "world", null, null);
-        self::$tickets[2] = new Ticket(2, 0, 50, 50, 50, 1, 20, 20, 200000, null, "This is the second test ticket.", "CONSOLE", "world", null, null);
-        self::$tickets[3] = new Ticket(3, 0, 50, 50, 50, 1, 20, 20, 200000, null, "This is the third test ticket.", "CONSOLE", "world", null, null);
-        self::$tickets[4] = new Ticket(4, 0, 50, 50, 50, 1, 20, 20, 200000, null, "This is the fourth test ticket.", "CONSOLE", "world", null, null);
-        self::$tickets[5] = new Ticket(5, 0, 50, 50, 50, 1, 20, 20, 1418361952157, null, "This is the fifth test ticket.", "CONSOLE", "world", null, null);
+
         # Make sure the array is sorted correctly, later this should be done after loading all data from a database.
         ksort(ReportRTS::$tickets);
 
