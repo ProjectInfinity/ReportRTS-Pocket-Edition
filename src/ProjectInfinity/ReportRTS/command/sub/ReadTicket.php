@@ -20,6 +20,7 @@ class ReadTicket {
         $this->plugin = $plugin;
         $this->data = $plugin->getDataProvider();
     }
+
     public function handleCommand(CommandSender $sender, $args) {
 
         # Not enough arguments to be anything but "/ticket read".
