@@ -16,15 +16,15 @@ interface DataProvider {
 
     /**
      * @param $sender
-     * @param $staffId
      * @param $world
      * @param Position $location
+     * @param $yaw
+     * @param $pitch
      * @param $message
-     * @param $userId
      * @param $timestamp
      * @return mixed
      */
-    public function createTicket($sender, $staffId = null, $world, Position $location, $message, $userId = null, $timestamp);
+    public function createTicket($sender, $world, Position $location, $yaw, $pitch, $message, $timestamp);
 
     /** @returns Integer */
     public function countHeldTickets();

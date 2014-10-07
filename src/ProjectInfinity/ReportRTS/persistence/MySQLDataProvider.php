@@ -62,17 +62,19 @@ class MySQLDataProvider implements DataProvider {
         return $id;
     }
 
-    public function createTicket($sender, $staffId = null, $world, Position $location, $message, $userId = null, $timestamp) {
+    public function createTicket($sender, $world, Position $location, $yaw, $pitch, $message, $timestamp) {
+
+        # Retrieve user data.
+        $user = $this->getUser($sender);
 
         # Check if user is banned before processing further.
-        $user = $this->getUser($sender);
         if($user['isBanned'] == 1) {
             return -1;
         }
 
         $world = $location->getLevel()->getName(); $x = $location->getX(); $y = $location->getY(); $z = $location->getZ();
-        $stmt = $this->database->prepare("INSERT INTO `reportrts_tickets` (`userId`, `timestamp`, `world`, `x`, `y`, `z`, `text`) VALUES($userId,?,?,?,?,?,?)");
-        $stmt->bind_param('isiiis', $timestamp, $world, $x, $y, $z, $message);
+        $stmt = $this->database->prepare("INSERT INTO `reportrts_tickets` (`userId`, `timestamp`, `world`, `x`, `y`, `z`, `yaw`, `pitch`, `text`) VALUES(".$user['id'].",?,?,?,?,?,?,?,?)");
+        $stmt->bind_param('isiiiiis', $timestamp, $world, $x, $y, $z, $yaw, $pitch, $message);
         $stmt->execute();
         if($stmt->affected_rows == 0) {
             $stmt->close();

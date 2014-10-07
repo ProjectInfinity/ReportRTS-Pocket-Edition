@@ -53,15 +53,16 @@ class OpenTicket {
             }
         }
 
-        $username = $sender->getName();
         if(!($sender instanceof Player)) {
             # Sender is more than likely console.
-            $data = $this->data->getUser($sender->getName());
-            $userId = $data['id'];
             $location = $this->plugin->getServer()->getDefaultLevel()->getSpawnLocation();
+            # Yaw & Pitch needs to be confirmed.
+            $yaw = 0.0;
+            $pitch = 0.0;
         } else {
-            $userId = $this->data->getUserId($username);
             $location = $sender->getPosition();
+            $yaw = $sender->yaw;
+            $pitch = $sender->pitch;
         }
 
         $args[0] = null;
@@ -78,7 +79,7 @@ class OpenTicket {
         }
 
         # TODO: Add openTicket function here.
-        $ticketId = $this->data->createTicket($sender->getName(), null, $location->getLevel()->getName(), $location, $message, $userId, round(microtime(true) * 1000));
+        $ticketId = $this->data->createTicket($sender->getName(), null, $location->getLevel()->getName(), $location, $yaw, $pitch, $message, round(microtime(true) * 1000));
 
         if($ticketId <= 0) {
             # Something went wrong. Let's see if they are banned.
