@@ -20,6 +20,7 @@ class MessageHandler {
     public static $ticketTooFast;
     public static $ticketDuplicate;
     public static $ticketOpenedUser;
+    public static $ticketOpenedStaff;
 
     public static function load() {
         self::$colors = (new \ReflectionClass(TextFormat::class))->getConstants();
@@ -32,6 +33,7 @@ class MessageHandler {
         self::$ticketTooFast = self::parseColors('%red%You need to wait %s seconds before attempting to open another ticket.');
         self::$ticketDuplicate = self::parseColors('%red%Your ticket has not been opened because it was detected as a duplicate.');
         self::$ticketOpenedUser = self::parseColors('%gold%You opened a ticket. A staff member should be with you soon.');
+        self::$ticketOpenedStaff = self::parseColors('%green%A new ticket has been opened by %s, id assigned #%u.');
     }
 
     /**

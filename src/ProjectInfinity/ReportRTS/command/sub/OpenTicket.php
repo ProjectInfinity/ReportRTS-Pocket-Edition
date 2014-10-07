@@ -95,7 +95,12 @@ class OpenTicket {
         $sender->sendMessage(MessageHandler::$ticketOpenedUser);
         $this->plugin->getLogger()->info($sender->getName()." opened a ticket with the ID #".$ticketId.".");
 
-        # TODO: Add ToolBox::messageStaff
+        # Notify all staff members of the newly opened ticket.
+        foreach($this->plugin->staff as $staff) {
+            $player = $this->plugin->getServer()->getPlayer($staff);
+            if($player == null) continue;
+            $player->sendMessage(sprintf(MessageHandler::$ticketOpenedStaff, $sender->getName(), $ticketId));
+        }
 
         array_push(ReportRTS::$tickets, new Ticket($ticketId, 0, $location->getX(), $location->getY(), $location->getZ(), null,
             $yaw, $pitch, $timestamp, null, $message, $sender->getName(), $location->getLevel()->getName(), null, null));
