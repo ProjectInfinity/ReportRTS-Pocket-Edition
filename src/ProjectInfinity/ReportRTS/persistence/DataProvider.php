@@ -15,6 +15,7 @@ interface DataProvider {
     public function createUser($username);
 
     /**
+     * @param $sender
      * @param $staffId
      * @param $world
      * @param Position $location
@@ -23,7 +24,7 @@ interface DataProvider {
      * @param $timestamp
      * @return mixed
      */
-    public function createTicket($staffId, $world, $location, $message, $userId, $timestamp);
+    public function createTicket($sender, $staffId = null, $world, Position $location, $message, $userId = null, $timestamp);
 
     /** @returns Integer */
     public function countHeldTickets();

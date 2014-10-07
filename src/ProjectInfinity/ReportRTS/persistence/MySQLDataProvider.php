@@ -2,6 +2,7 @@
 
 namespace ProjectInfinity\ReportRTS\persistence;
 
+use pocketmine\level\Position;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\task\MySQLKeepAliveTask;
 
@@ -61,9 +62,27 @@ class MySQLDataProvider implements DataProvider {
         return $id;
     }
 
-    public function createTicket($staffId, $world, $x, $y, $z, $message, $userId, $timestamp)
-    {
-        // TODO: Implement createTicket() method.
+    public function createTicket($sender, $staffId = null, $world, Position $location, $message, $userId = null, $timestamp) {
+
+        # Check if user is banned before processing further.
+        $user = $this->getUser($sender);
+        if($user['isBanned'] == 1) {
+            return -1;
+        }
+
+        $world = $location->getLevel()->getName(); $x = $location->getX(); $y = $location->getY(); $z = $location->getZ();
+        $stmt = $this->database->prepare("INSERT INTO `reportrts_tickets` (`userId`, `timestamp`, `world`, `x`, `y`, `z`, `text`) VALUES($userId,?,?,?,?,?,?)");
+        $stmt->bind_param('isiiis', $timestamp, $world, $x, $y, $z, $message);
+        $stmt->execute();
+        if($stmt->affected_rows == 0) {
+            $stmt->close();
+            return 0;
+        }
+        $id = $stmt->insert_id;
+        # We're done here, time to close up shop.
+        $stmt->close();
+
+        return $id;
     }
 
     public function countHeldTickets() {

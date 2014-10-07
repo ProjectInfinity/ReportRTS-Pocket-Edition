@@ -78,10 +78,20 @@ class OpenTicket {
         }
 
         # TODO: Add openTicket function here.
-        if($this->data->createTicket(null, $location->getLevel()->getName(), $location, $message, $userId, round(microtime(true) * 1000)) == 0) {
+        $ticketId = $this->data->createTicket($sender->getName(), null, $location->getLevel()->getName(), $location, $message, $userId, round(microtime(true) * 1000));
+
+        if($ticketId <= 0) {
+            # Something went wrong. Let's see if they are banned.
+            if($ticketId == -1) {
+                $sender->sendMessage(sprintf(MessageHandler::$generalError, "You are banned from opening tickets."));
+                return true;
+            }
             $sender->sendMessage(sprintf(MessageHandler::$generalError, "Could not open ticket."));
             return true;
         }
+
+        # TODO: Add messaging.
+
         return true;
     }
 
