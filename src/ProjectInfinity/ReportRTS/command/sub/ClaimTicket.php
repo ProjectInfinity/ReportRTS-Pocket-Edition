@@ -21,7 +21,7 @@ class ClaimTicket {
     public function handleCommand(CommandSender $sender, $args) {
 
         ### Check if anything is wrong with the provided input before going further. ###
-        if(PermissionHandler::canClaimTicket) {
+        if(!PermissionHandler::canClaimTicket) {
             $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canClaimTicket));
             return true;
         }
@@ -35,9 +35,7 @@ class ClaimTicket {
             $sender->sendMessage(sprintf(MessageHandler::$generalError, "Ticket ID must be a number. Provided: ".$args[1]));
             return true;
         }
-        ### We're done! Let's start processing stuff. ###
 
-        $ticket = ReportRTS::$tickets[$args[1]];
         $ticketId = intval($args[1]);
 
         if(!isset(ReportRTS::$tickets[$ticketId])) {
@@ -45,6 +43,9 @@ class ClaimTicket {
             $sender->sendMessage(MessageHandler::$ticketNotOpen);
             return true;
         }
+        ### We're done! Let's start processing stuff. ###
+
+        $ticket = ReportRTS::$tickets[$args[1]];
 
         $timestamp = microtime(true) * 1000;
 

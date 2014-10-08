@@ -3,6 +3,7 @@
 namespace ProjectInfinity\ReportRTS\persistence;
 
 use pocketmine\level\Position;
+use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\ReportRTS;
 
 interface DataProvider {
@@ -42,7 +43,12 @@ interface DataProvider {
      * @return \mysqli_result
      */
     public function getTickets($cursor, $limit, $status = 0);
-    public function getTicketById($id);
+
+    /**
+     * @param $id
+     * @return Ticket
+     */
+    public function getTicket($id);
     public function getLocation($id);
     public function getUnnotifiedUsers();
     public function getEverything($table);

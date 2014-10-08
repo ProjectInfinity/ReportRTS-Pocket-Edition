@@ -3,8 +3,10 @@
 namespace ProjectInfinity\ReportRTS\persistence;
 
 use pocketmine\level\Position;
+use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\task\MySQLKeepAliveTask;
+use ProjectInfinity\ReportRTS\util\ToolBox;
 
 class MySQLDataProvider implements DataProvider {
 
@@ -140,9 +142,13 @@ class MySQLDataProvider implements DataProvider {
         return $result;
     }
 
-    public function getTicketById($id)
-    {
-        // TODO: Implement getTicketById() method.
+    /** @return Ticket */
+    public function getTicket($id) {
+
+        if(!ToolBox::isNumber($id)) return null;
+        $ticket = $this->database->query("SELECT * FROM `reportrts_tickets` WHERE `id` = '$id' LIMIT 1")->fetch_row();
+
+        return $ticket;
     }
 
     public function getLocation($id)
@@ -181,8 +187,16 @@ class MySQLDataProvider implements DataProvider {
     }
 
     public function setTicketStatus($id, $username, $status, $comment, $notified, $timestamp) {
-        // TODO: Implement setTicketStatus() method.
 
+        if(!isset(ReportRTS::$tickets[$id])) {
+            # Ticket is not of status OPEN(1).
+            $ticket = $this->getTicket($id);
+        } else {
+            $ticket = ReportRTS::$tickets[$id];
+        }
+
+        # TODO: Continue where I left off. SQLDB.java#L270
+        return true;
     }
 
     public function setNotificationStatus($id, $status)

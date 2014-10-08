@@ -98,8 +98,8 @@ class OpenTicket {
         # Notify all staff members of the newly opened ticket.
         $this->plugin->messageStaff(sprintf(MessageHandler::$ticketOpenedStaff, $sender->getName(), $ticketId));
 
-        array_push(ReportRTS::$tickets, new Ticket($ticketId, 0, $location->getX(), $location->getY(), $location->getZ(), null,
-            $yaw, $pitch, $timestamp, null, $message, $sender->getName(), $location->getLevel()->getName(), null, null));
+        ReportRTS::$tickets[$ticketId] = new Ticket($ticketId, 0, $location->getX(), $location->getY(), $location->getZ(), null,
+            $yaw, $pitch, $timestamp, null, $message, $sender->getName(), $location->getLevel()->getName(), null, null);
 
         return true;
     }
