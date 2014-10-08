@@ -144,7 +144,6 @@ class MySQLDataProvider implements DataProvider {
 
     /** @return Ticket */
     public function getTicket($id) {
-
         if(!ToolBox::isNumber($id)) return null;
         $ticket = $this->database->query("SELECT * FROM `reportrts_tickets` WHERE `id` = '$id' LIMIT 1")->fetch_row();
 
@@ -195,7 +194,18 @@ class MySQLDataProvider implements DataProvider {
             $ticket = ReportRTS::$tickets[$id];
         }
 
+        # TODO: Need userExists() check.
         # TODO: Continue where I left off. SQLDB.java#L270
+        # TODO: Evaluate the return type and content.
+
+        # Make sure username is alphanumeric.
+        if(!ctype_alnum($username)) return false;
+
+        # Make sure ticket statuses don't clash.
+        if($ticket->getStatus() == $status or ($status == 2 && $ticket->getStatus())) return false;
+
+        $stmt = $this->database->prepare("UPDATE `reportrts_tickets` SET `status` = ?, `staffId` = ?, `staffTime` = ?, `comment` = ?, `notified` = ? WHERE `id` = ?");
+        $stmt->bind_param('iiisii', $status, $staffId, round(microtime(true) * 1000), $comment, $notified, $id);
         return true;
     }
 
