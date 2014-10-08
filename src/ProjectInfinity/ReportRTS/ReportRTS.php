@@ -127,6 +127,14 @@ class ReportRTS extends PluginBase {
         return self::$tickets;
     }
 
+    public function messageStaff($message) {
+        foreach($this->staff as $staff) {
+            $player = $this->getServer()->getPlayer($staff);
+            if($player == null) continue;
+            $player->sendMessage($message);
+        }
+    }
+
     /** @param DataProvider $provider */
     public function setDataProvider(DataProvider $provider) {
         $this->provider = $provider;

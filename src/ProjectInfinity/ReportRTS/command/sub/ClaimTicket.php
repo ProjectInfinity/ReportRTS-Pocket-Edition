@@ -37,6 +37,7 @@ class ClaimTicket {
         }
         ### We're done! Let's start processing stuff. ###
 
+        $ticket = ReportRTS::$tickets[$args[1]];
         $ticketId = intval($args[1]);
 
         if(!isset(ReportRTS::$tickets[$ticketId])) {
@@ -48,8 +49,18 @@ class ClaimTicket {
         $timestamp = microtime(true) * 1000;
 
         if(!$this->data->setTicketStatus($ticketId, $sender->getName(), 1, null, 0, $timestamp)) {
-            # TODO: ClaimTicket.java#L51
+            $sender->sendMessage(sprintf(MessageHandler::$generalError, "Unable to claim ticket #".$ticketId));
+            return true;
         }
+
+        $player = $this->plugin->getServer()->getPlayer($ticket->getName());
+        if($player != null) {
+            $player->sendMessage(MessageHandler::$ticketClaimUser, $sender->getName());
+            $player->sendMessage(MessageHandler::$ticketClaimText, $ticket->getMessage());
+        }
+
+        # Let staff know about this change.
+        $this->plugin->messageStaff(sprintf(MessageHandler::$ticketClaim, $sender->getName(), $ticketId));
 
         return true;
     }

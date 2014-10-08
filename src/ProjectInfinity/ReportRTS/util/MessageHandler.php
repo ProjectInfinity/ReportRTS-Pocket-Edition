@@ -22,6 +22,9 @@ class MessageHandler {
     public static $ticketOpenedUser;
     public static $ticketOpenedStaff;
     public static $ticketNotOpen;
+    public static $ticketClaim;
+    public static $ticketClaimUser;
+    public static $ticketClaimText;
 
     public static function load() {
         self::$colors = (new \ReflectionClass(TextFormat::class))->getConstants();
@@ -36,6 +39,9 @@ class MessageHandler {
         self::$ticketOpenedUser = self::parseColors('%gold%You opened a ticket. A staff member should be with you soon.');
         self::$ticketOpenedStaff = self::parseColors('%green%A new ticket has been opened by %s, id assigned #%u.');
         self::$ticketNotOpen = self::parseColors('%red%Specified ticket is not open.');
+        self::$ticketClaim = self::parseColors('%gold%%s is now handling ticket #%u.');
+        self::$ticketClaimUser = self::parseColors('%gold%%s is now handling your ticket.');
+        self::$ticketClaimText = self::parseColors('%gold%Ticket text: %yellow%%s');
     }
 
     /**
