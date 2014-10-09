@@ -105,6 +105,7 @@ class ReportRTS extends PluginBase {
         $this->commands = array();
         $this->commands['readTicket'] = strtoupper($this->getConfig()->get("command")["readTicket"]);
         $this->commands['openTicket'] = strtoupper($this->getConfig()->get("command")["openTicket"]);
+        $this->commands['holdTicket'] = strtoupper($this->getConfig()->get("command")["holdTicket"]);
         $this->commands['closeTicket'] = strtoupper($this->getConfig()->get("command")["closeTicket"]);
         $this->commands['reopenTicket'] = strtoupper($this->getConfig()->get("command")["reopenTicket"]);
         $this->commands['claimTicket'] = strtoupper($this->getConfig()->get("command")["claimTicket"]);
