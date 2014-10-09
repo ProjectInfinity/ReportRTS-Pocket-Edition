@@ -64,7 +64,7 @@ class ReadTicket {
      */
     private function viewPage(CommandSender $sender, $page) {
 
-        if(!PermissionHandler::canReadAll) {
+        if(!$sender->hasPermission(PermissionHandler::canReadAll)) {
             $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::isStaff));
             return true;
         }
@@ -103,7 +103,7 @@ class ReadTicket {
 
     private function viewHeld(CommandSender $sender, $page) {
 
-        if(!PermissionHandler::canReadAll) {
+        if(!$sender->hasPermission(PermissionHandler::canReadAll)) {
             $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canReadAll));
             return true;
         }

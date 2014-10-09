@@ -22,7 +22,7 @@ class OpenTicket {
 
     public function handleCommand(CommandSender $sender, $args) {
 
-        if(!PermissionHandler::canOpenTicket) {
+        if(!$sender->hasPermission(PermissionHandler::canOpenTicket)) {
             $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canOpenTicket));
             return true;
         }
@@ -38,14 +38,14 @@ class OpenTicket {
         }
 
         # Check if the sender has too many open tickets. If we do it here, we skip the DB calls.
-        if(ToolBox::countOpenTickets($sender->getName()) >= $this->plugin->ticketMax && !(PermissionHandler::bypassTicketLimit)) {
+        if(ToolBox::countOpenTickets($sender->getName()) >= $this->plugin->ticketMax && !($sender->hasPermission(PermissionHandler::bypassTicketLimit))) {
             $sender->sendMessage(MessageHandler::$ticketTooMany);
             return true;
         }
 
         # Check if the sender is opening tickets too quickly. If we do it here we skip the DB calls.
         if($this->plugin->ticketDelay > 0) {
-            if(!(PermissionHandler::bypassTicketLimit)) {
+            if(!$sender->hasPermission(PermissionHandler::bypassTicketLimit)) {
                 $wait = ToolBox::timeDifference($sender->getName(), $this->plugin->ticketDelay);
                 if($wait > 0) {
                     $sender->sendMessage(sprintf(MessageHandler::$ticketTooFast, $wait));

@@ -21,7 +21,7 @@ class ClaimTicket {
     public function handleCommand(CommandSender $sender, $args) {
 
         ### Check if anything is wrong with the provided input before going further. ###
-        if(!PermissionHandler::canClaimTicket) {
+        if(!$sender->hasPermission(PermissionHandler::canClaimTicket)) {
             $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canClaimTicket));
             return true;
         }

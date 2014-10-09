@@ -21,7 +21,7 @@ class HoldTicket {
 
     public function handleCommand(CommandSender $sender, $args) {
 
-        if(!PermissionHandler::canHoldTicket) {
+        if(!$sender->hasPermission(PermissionHandler::canHoldTicket)) {
             $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canHoldTicket));
             return true;
         }
