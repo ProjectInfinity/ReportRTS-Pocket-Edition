@@ -47,7 +47,7 @@ class ClaimTicket {
 
         $ticket = ReportRTS::$tickets[$args[1]];
 
-        $timestamp = microtime(true) * 1000;
+        $timestamp = round(microtime(true) * 1000);
 
         if($resultCode = $this->data->setTicketStatus($ticketId, $sender->getName(), 1, null, 0, $timestamp) and $resultCode != 1) {
             # TODO: Verify that this works later on.
@@ -64,6 +64,12 @@ class ClaimTicket {
             $sender->sendMessage(sprintf(MessageHandler::$generalError, "Unable to claim ticket #".$ticketId));
             return true;
         }
+
+        # Set ticket info in the ticket array too.
+        $ticket->setStatus(1);
+        $ticket->setStaffName($sender->getName());
+        $ticket->setStaffTimestamp($timestamp);
+        ReportRTS::$tickets[$args[1]] = $ticket;
 
         $player = $this->plugin->getServer()->getPlayer($ticket->getName());
         if($player != null) {
