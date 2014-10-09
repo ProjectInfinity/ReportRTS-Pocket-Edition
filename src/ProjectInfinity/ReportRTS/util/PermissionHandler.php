@@ -13,5 +13,6 @@ class PermissionHandler {
     const canHoldTicket = "reportrts.command.hold";
 
     const bypassTicketLimit = "reportrts.bypass.ticket";
+    const bypassTicketClaim = "reportrts.bypass.claim";
 
 }

@@ -22,9 +22,12 @@ class MessageHandler {
     public static $ticketOpenedUser;
     public static $ticketOpenedStaff;
     public static $ticketNotOpen;
+    public static $ticketNotClaimed;
     public static $ticketClaim;
     public static $ticketClaimUser;
     public static $ticketClaimText;
+    public static $ticketUnclaim;
+    public static $ticketUnclaimUser;
     public static $ticketHold;
     public static $ticketHoldUser;
     public static $ticketHoldText;
@@ -45,8 +48,11 @@ class MessageHandler {
         self::$ticketOpenedUser = self::parseColors('%gold%You opened a ticket. A staff member should be with you soon.');
         self::$ticketOpenedStaff = self::parseColors('%green%A new ticket has been opened by %s, id assigned #%u.');
         self::$ticketNotOpen = self::parseColors('%red%Specified ticket is not open.');
+        self::$ticketNotClaimed = self::parseColors('%red%You may only unclaim tickets that are claimed.');
         self::$ticketClaim = self::parseColors('%gold%%s is now handling ticket #%u.');
         self::$ticketClaimUser = self::parseColors('%gold%%s is now handling your ticket.');
+        self::$ticketUnclaim = self::parseColors('%gold%%s is no longer handling ticket #%u.');
+        self::$ticketUnclaimUser = self::parseColors('%gold%%s is no longer handling your ticket.');
         self::$ticketClaimText = self::parseColors('%gold%Ticket text: %yellow%%s');
         self::$ticketHold = self::parseColors('%gold%Ticket #%u was put on hold by %s');
         self::$ticketHoldText = self::parseColors('%gold%Your ticket was put on hold by %s');

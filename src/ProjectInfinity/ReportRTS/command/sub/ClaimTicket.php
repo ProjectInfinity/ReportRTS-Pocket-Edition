@@ -38,8 +38,8 @@ class ClaimTicket {
 
         $ticketId = intval($args[1]);
 
-        if(!isset(ReportRTS::$tickets[$ticketId])) {
-            # The ticket that the user is trying to claim is not in the array (not open).
+        if(!isset(ReportRTS::$tickets[$ticketId]) or ReportRTS::$tickets[$ticketId]->getStatus() == 1) {
+            # The ticket that the user is trying to claim is not in the array or is already claimed (not open).
             $sender->sendMessage(MessageHandler::$ticketNotOpen);
             return true;
         }
