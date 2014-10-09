@@ -49,7 +49,18 @@ class ClaimTicket {
 
         $timestamp = microtime(true) * 1000;
 
-        if(!$this->data->setTicketStatus($ticketId, $sender->getName(), 1, null, 0, $timestamp)) {
+        if($resultCode = $this->data->setTicketStatus($ticketId, $sender->getName(), 1, null, 0, $timestamp) and $resultCode != 1) {
+            # TODO: Verify that this works later on.
+            if($resultCode == -1) {
+                # Username is invalid or does not exist.
+                $sender->sendMessage(sprintf(MessageHandler::$userNotExists, $sender->getName()));
+                return true;
+            }
+            if($resultCode == -2) {
+                # Ticket status incompatibilities.
+                $sender->sendMessage(MessageHandler::$ticketStatusError);
+                return true;
+            }
             $sender->sendMessage(sprintf(MessageHandler::$generalError, "Unable to claim ticket #".$ticketId));
             return true;
         }
