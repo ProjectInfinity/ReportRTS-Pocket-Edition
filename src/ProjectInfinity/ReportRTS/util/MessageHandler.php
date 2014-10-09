@@ -12,6 +12,7 @@ class MessageHandler {
     public static $permissionError;
 
     public static $noTickets;
+    public static $noStaff;
 
     public static $holdNoTickets;
 
@@ -35,6 +36,8 @@ class MessageHandler {
 
     public static $userNotExists;
 
+    public static $staffList;
+
     public static $separator;
 
     public static function load() {
@@ -42,6 +45,7 @@ class MessageHandler {
         self::$generalError = self::parseColors('%red%An error occurred. Reference: %s');
         self::$permissionError = self::parseColors('%yellow%You need permission "%s" to do that');
         self::$noTickets = self::parseColors('%white%There are no tickets at this time.');
+        self::$noStaff = self::parseColors('%yellow%There are no staff members online.');
         self::$holdNoTickets = self::parseColors('%gold%There are no tickets on hold right now.');
         self::$ticketTooShort = self::parseColors('%red%Your ticket needs to contain at least %s words.');
         self::$ticketTooMany = self::parseColors('%red%You have too many open tickets, please wait before opening more.');
@@ -62,6 +66,7 @@ class MessageHandler {
         self::$userNotExists = self::parseColors('%red%The specified user %s does not exist or contains invalid characters.');
         self::$ticketStatusError = self::parseColors('%red%Unable to set ticket status. Check that the status of the ticket does not collide.');
         self::$separator = self::parseColors('%yellow%, ');
+        self::$staffList = self::parseColors('%aqua%Staff online: %yellow%%s');
     }
 
     /**
