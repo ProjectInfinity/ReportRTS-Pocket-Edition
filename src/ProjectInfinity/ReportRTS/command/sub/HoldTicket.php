@@ -9,7 +9,7 @@ use ProjectInfinity\ReportRTS\util\MessageHandler;
 use ProjectInfinity\ReportRTS\util\PermissionHandler;
 use ProjectInfinity\ReportRTS\util\ToolBox;
 
-class HoldCommand {
+class HoldTicket {
 
     private $plugin;
     private $data;

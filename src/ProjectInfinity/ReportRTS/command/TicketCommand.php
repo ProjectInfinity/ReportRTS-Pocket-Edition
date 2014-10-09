@@ -6,9 +6,10 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use ProjectInfinity\ReportRTS\command\sub\ClaimTicket;
-use ProjectInfinity\ReportRTS\command\sub\HoldCommand;
+use ProjectInfinity\ReportRTS\command\sub\HoldTicket;
 use ProjectInfinity\ReportRTS\command\sub\OpenTicket;
 use ProjectInfinity\ReportRTS\command\sub\ReadTicket;
+use ProjectInfinity\ReportRTS\command\sub\UnclaimTicket;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\ToolBox;
 
@@ -20,6 +21,7 @@ class TicketCommand implements CommandExecutor {
     private $openCommand;
     private $claimCommand;
     private $holdCommand;
+    private $unclaimCommand;
 
     public function __construct(ReportRTS $plugin) {
         $this->plugin = $plugin;
@@ -28,7 +30,8 @@ class TicketCommand implements CommandExecutor {
         $this->readCommand = new ReadTicket($plugin);
         $this->openCommand = new OpenTicket($plugin);
         $this->claimCommand = new ClaimTicket($plugin);
-        $this->holdCommand = new HoldCommand($plugin);
+        $this->holdCommand = new HoldTicket($plugin);
+        $this->unclaimCommand = new UnclaimTicket($plugin);
     }
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
@@ -62,6 +65,11 @@ class TicketCommand implements CommandExecutor {
         if(strtoupper($args[0]) == $this->plugin->commands['claimTicket']) {
             if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
             $result = $this->claimCommand->handleCommand($sender, $args);
+        }
+        /** Unclaim a ticket. **/
+        if(strtoupper($args[0]) == $this->plugin->commands['unclaimTicket']) {
+            if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
+            $result = $this->unclaimCommand->handleCommand($sender, $args);
         }
         /** Hold a ticket. **/
         if(strtoupper($args[0]) == $this->plugin->commands['holdTicket']) {
