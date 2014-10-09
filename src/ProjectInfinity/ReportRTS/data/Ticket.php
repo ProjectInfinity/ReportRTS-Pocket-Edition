@@ -172,6 +172,10 @@ class Ticket {
         $this->stafftstamp = $staffTimestamp;
     }
 
+    public function setStaffName($staffName) {
+        $this->staffName = $staffName;
+    }
+
     public function setX($x) {
         $this->x = $x;
     }
