@@ -30,7 +30,6 @@ const DAY_MILLIS = 86400000; # 24 * HOUR_MILLIS;
     public static function countOpenTickets($player) {
         $i = 0;
         foreach(ReportRTS::$tickets as $ticket) {
-            // TODO: This needs testing....
             if($ticket->getName() == $player) $i++;
         }
         return $i;
