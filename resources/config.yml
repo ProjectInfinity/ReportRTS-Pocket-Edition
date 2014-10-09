@@ -29,4 +29,6 @@ storage:
   password: "password"
   database: "minecraft"
 
-debug: true
+general:
+  hideInvisibleStaff: true
+  debug: false

@@ -64,7 +64,7 @@ class ReportRTS extends PluginBase {
         $this->reloadConfig();
 
         # Shows debug information in the plugin if enabled.
-        $this->debug = $this->getConfig()->get("debug");
+        $this->debug = $this->getConfig()->get("general")["debug"];
 
         # Ticket configuration.
         $this->ticketMax = $this->getConfig()->get("ticket")["max"];

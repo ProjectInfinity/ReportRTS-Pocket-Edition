@@ -35,6 +35,8 @@ class MessageHandler {
 
     public static $userNotExists;
 
+    public static $separator;
+
     public static function load() {
         self::$colors = (new \ReflectionClass(TextFormat::class))->getConstants();
         self::$generalError = self::parseColors('%red%An error occurred. Reference: %s');
@@ -59,6 +61,7 @@ class MessageHandler {
         self::$ticketHoldText = self::parseColors('%gold%Ticket text: %yellow%%s %gold%Reason: %yellow%%s');
         self::$userNotExists = self::parseColors('%red%The specified user %s does not exist or contains invalid characters.');
         self::$ticketStatusError = self::parseColors('%red%Unable to set ticket status. Check that the status of the ticket does not collide.');
+        self::$separator = self::parseColors('%yellow%, ');
     }
 
     /**
