@@ -190,6 +190,7 @@ class MySQLDataProvider implements DataProvider {
         if(!isset(ReportRTS::$tickets[$id])) {
             # Ticket is not of status OPEN(1).
             $ticket = $this->getTicket($id);
+            if($ticket == null) return -2;
         } else {
             # Retrieve ticket from ticket array.
             $ticket = ReportRTS::$tickets[$id];
@@ -204,10 +205,11 @@ class MySQLDataProvider implements DataProvider {
         }
 
         # Make sure ticket statuses don't clash.
-        if($ticket->getStatus() == $status or ($status == 2 && $ticket->getStatus())) return -2;
+        if($ticket->getStatus() == $status or ($status == 2 && $ticket->getStatus() == 3)) return -2;
 
         $stmt = $this->database->prepare("UPDATE `reportrts_tickets` SET `status` = ?, `staffId` = ?, `staffTime` = ?, `comment` = ?, `notified` = ? WHERE `id` = ?");
         $stmt->bind_param('iiisii', $status, $staffId, $timestamp, $comment, $notified, $id);
+        $stmt->execute();
         $result = $stmt->affected_rows > 0 ? 1 : 0;
         $stmt->close();
 

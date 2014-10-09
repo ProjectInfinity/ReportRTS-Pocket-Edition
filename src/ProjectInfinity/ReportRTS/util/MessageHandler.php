@@ -25,6 +25,9 @@ class MessageHandler {
     public static $ticketClaim;
     public static $ticketClaimUser;
     public static $ticketClaimText;
+    public static $ticketHold;
+    public static $ticketHoldUser;
+    public static $ticketHoldText;
     public static $ticketStatusError;
 
     public static $userNotExists;
@@ -45,6 +48,9 @@ class MessageHandler {
         self::$ticketClaim = self::parseColors('%gold%%s is now handling ticket #%u.');
         self::$ticketClaimUser = self::parseColors('%gold%%s is now handling your ticket.');
         self::$ticketClaimText = self::parseColors('%gold%Ticket text: %yellow%%s');
+        self::$ticketHold = self::parseColors('%gold%Ticket #%u was put on hold by %s');
+        self::$ticketHoldText = self::parseColors('%gold%Your ticket was put on hold by %s');
+        self::$ticketHoldText = self::parseColors('%gold%Ticket text: %yellow%%s %gold%Reason: %yellow%%s');
         self::$userNotExists = self::parseColors('%red%The specified user %s does not exist or contains invalid characters.');
         self::$ticketStatusError = self::parseColors('%red%Unable to set ticket status. Check that the status of the ticket does not collide.');
     }
