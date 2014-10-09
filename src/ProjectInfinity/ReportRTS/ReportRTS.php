@@ -34,6 +34,7 @@ class ReportRTS extends PluginBase {
     public $notifications;
 
     public $debug;
+    public $vanish;
 
     /** @var  DataProvider */
     protected $provider;
@@ -65,6 +66,8 @@ class ReportRTS extends PluginBase {
 
         # Shows debug information in the plugin if enabled.
         $this->debug = $this->getConfig()->get("general")["debug"];
+        # Should the plugin hide invisible staff from the list command?
+        $this->vanish = $this->getConfig()->get("general")["hideInvisibleStaff"];
 
         # Ticket configuration.
         $this->ticketMax = $this->getConfig()->get("ticket")["max"];
