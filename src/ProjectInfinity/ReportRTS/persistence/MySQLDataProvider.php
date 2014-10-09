@@ -52,11 +52,10 @@ class MySQLDataProvider implements DataProvider {
 
     public function createUser($username) {
         $id = 0;
-        if(strtolower($username) == "console") {
-            # TODO: Add CONSOLE stuff here.
-        }
+
         $player = $this->plugin->getServer()->getPlayer($username);
-        if($player == null) return 0;
+        if($player == null and strtoupper($username) != "CONSOLE") return 0;
+
         $sql = $this->database->prepare("INSERT INTO `reportrts_users` (`name`, `banned`) VALUES (?, '0')");
         $sql->bind_param("s", $username);
         $sql->execute();
