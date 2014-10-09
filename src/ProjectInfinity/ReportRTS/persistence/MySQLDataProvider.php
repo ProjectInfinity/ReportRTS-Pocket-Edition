@@ -191,22 +191,27 @@ class MySQLDataProvider implements DataProvider {
             # Ticket is not of status OPEN(1).
             $ticket = $this->getTicket($id);
         } else {
+            # Retrieve ticket from ticket array.
             $ticket = ReportRTS::$tickets[$id];
         }
 
-        # TODO: Need userExists() check.
-        # TODO: Continue where I left off. SQLDB.java#L270
-        # TODO: Evaluate the return type and content.
-
         # Make sure username is alphanumeric.
-        if(!ctype_alnum($username)) return false;
+        if(!ctype_alnum($username)) return -1;
+
+        # Check if user exists. Array_filter might be necessary, we'll find out.
+        if(empty($this->getUser($username))) {
+            return -1;
+        }
 
         # Make sure ticket statuses don't clash.
-        if($ticket->getStatus() == $status or ($status == 2 && $ticket->getStatus())) return false;
+        if($ticket->getStatus() == $status or ($status == 2 && $ticket->getStatus())) return -2;
 
         $stmt = $this->database->prepare("UPDATE `reportrts_tickets` SET `status` = ?, `staffId` = ?, `staffTime` = ?, `comment` = ?, `notified` = ? WHERE `id` = ?");
         $stmt->bind_param('iiisii', $status, $staffId, round(microtime(true) * 1000), $comment, $notified, $id);
-        return true;
+        $result = $stmt->affected_rows > 0 ? 1 : 0;
+        $stmt->close();
+
+        return $result;
     }
 
     public function setNotificationStatus($id, $status)
