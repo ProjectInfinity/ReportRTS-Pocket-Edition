@@ -6,6 +6,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use ProjectInfinity\ReportRTS\command\sub\ClaimTicket;
+use ProjectInfinity\ReportRTS\command\sub\CloseTicket;
 use ProjectInfinity\ReportRTS\command\sub\HoldTicket;
 use ProjectInfinity\ReportRTS\command\sub\ListStaff;
 use ProjectInfinity\ReportRTS\command\sub\OpenTicket;
@@ -20,6 +21,7 @@ class TicketCommand implements CommandExecutor {
 
     private $readCommand;
     private $openCommand;
+    private $closeCommand;
     private $claimCommand;
     private $holdCommand;
     private $unclaimCommand;
@@ -31,6 +33,7 @@ class TicketCommand implements CommandExecutor {
         # Set up sub-commands.
         $this->readCommand = new ReadTicket($plugin);
         $this->openCommand = new OpenTicket($plugin);
+        $this->closeCommand = new CloseTicket($plugin);
         $this->claimCommand = new ClaimTicket($plugin);
         $this->holdCommand = new HoldTicket($plugin);
         $this->unclaimCommand = new UnclaimTicket($plugin);
@@ -63,6 +66,11 @@ class TicketCommand implements CommandExecutor {
         if(strtoupper($args[0]) == $this->plugin->commands['openTicket']) {
             if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
             $result = $this->openCommand->handleCommand($sender, $args);
+        }
+        /** Closes a ticket. **/
+        if(strtoupper($args[0]) == $this->plugin->commands['closeTicket']) {
+            if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
+            $result = $this->closeCommand->handleCommand($sender, $args);
         }
         /** Claim a ticket. **/
         if(strtoupper($args[0]) == $this->plugin->commands['claimTicket']) {
