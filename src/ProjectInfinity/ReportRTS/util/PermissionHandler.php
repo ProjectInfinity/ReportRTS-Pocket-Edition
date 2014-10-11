@@ -9,6 +9,7 @@ class PermissionHandler {
     const canReload = "reportrts.command.reload";
     const canReadAll = "reportrts.command.read";
     const canOpenTicket = "reportrts.command.open";
+    const canCloseTicket = "reportrts.command.close";
     const canClaimTicket = "reportrts.command.claim";
     const canHoldTicket = "reportrts.command.hold";
     const canSeeStaff = "reportrts.command.list";
