@@ -46,7 +46,7 @@ class UnclaimTicket {
         }
 
         if($sender instanceof Player) {
-            if(strtoupper($sender->getName()) == ReportRTS::$tickets[$ticketId]->getStaffName() and !$sender->hasPermission(PermissionHandler::bypassTicketClaim)) {
+            if(strtoupper($sender->getName()) != ReportRTS::$tickets[$ticketId]->getStaffName() and !$sender->hasPermission(PermissionHandler::bypassTicketClaim)) {
                 $sender->sendMessage("You need ".PermissionHandler::bypassTicketClaim." to do that.");
                 return true;
             }
