@@ -35,12 +35,22 @@ class CloseTicket {
 
         $ticketId = intval($args[1]);
 
-        # Check if the user that opened the ticket is online.
-        $online = ToolBox::isOnline(ReportRTS::$tickets[$ticketId]->getName());
-        # Check if ticket is claimed and if the user that sent the command is the same user as the one that opened the ticket.
-        $isClaimed = ReportRTS::$tickets[$ticketId]->getStatus() == 1 ? strtoupper(ReportRTS::$tickets[$ticketId]->getStaffName()) != strtoupper($sender->getName()) : false;
+        $ticket = null;
 
-        # TODO: Continue L85#CloseTicket.java
+        if(isset(ReportRTS::$tickets[$ticketId])) {
+            $ticket = ReportRTS::$tickets[$ticketId];
+        } else {
+            $ticket = $this->data->getTicket($ticketId);
+        }
+
+        # Check if ticket is claimed and if the user that sent the command is the same user as the one that opened the ticket.
+        $isClaimed = $ticket->getStatus() == 1 ? strtoupper($ticket->getStaffName()) != strtoupper($sender->getName()) : false;
+
+        if($isClaimed && !$sender->hasPermission(PermissionHandler::bypassTicketClaim)) {
+            $sender->sendMessage(sprintf(MessageHandler::$generalError, "Ticket #".$ticketId." is claimed by another player."));
+            return true;
+        }
+
         # Get rid of arguments we do not want in the text.
         $args[0] = null;
         $args[1] = null;
@@ -60,6 +70,21 @@ class CloseTicket {
             }
             $sender->sendMessage(sprintf(MessageHandler::$generalError, "Unable to close ticket #".$ticketId));
             return true;
+        }
+
+
+        $player = $this->plugin->getServer()->getPlayer($ticket->getName());
+        if($player != null) {
+            # User is online! Let's message them.
+            $player->sendMessage(sprintf(MessageHandler::$ticketCloseUser, $sender->getName()));
+            $player->sendMessage(sprintf(MessageHandler::$ticketClaimText, $ticket->getMessage(), trim($comment)));
+            // TODO: Add notification if not online.
+        }
+        // $player->sendMessage(sprintf(MessageHandler::$ticketClose, $ticketId, $sender->getName()));
+
+        # Remove the ticket if it is located in the ticket array.
+        if(isset(ReportRTS::$tickets[$ticketId])) {
+            unset(ReportRTS::$tickets[$ticketId]);
         }
 
         return true;
