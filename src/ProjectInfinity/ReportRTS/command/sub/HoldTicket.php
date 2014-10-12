@@ -32,6 +32,15 @@ class HoldTicket {
         }
 
         $ticketId = intval($args[1]);
+
+        # Check if ticket is claimed and if the user that sent the command is the same user as the one that opened the ticket.
+        $isClaimed = ReportRTS::$tickets[$ticketId]->getStatus() == 1 ? strtoupper(ReportRTS::$tickets[$ticketId]->getStaffName()) != strtoupper($sender->getName()) : false;
+
+        if($isClaimed && !$sender->hasPermission(PermissionHandler::bypassTicketClaim)) {
+            $sender->sendMessage(sprintf(MessageHandler::$generalError, "Ticket #".$ticketId." is claimed by another player."));
+            return true;
+        }
+
         # Get rid of arguments we do not want in the text.
         $args[0] = null;
         $args[1] = null;
