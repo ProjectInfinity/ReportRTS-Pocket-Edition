@@ -105,7 +105,7 @@ class ReportRTS extends PluginBase {
         ksort(ReportRTS::$tickets);
 
         # Command configuration.
-        $this->commands = array();
+        $this->commands = [];
         $this->commands['readTicket'] = strtoupper($this->getConfig()->get("command")["readTicket"]);
         $this->commands['openTicket'] = strtoupper($this->getConfig()->get("command")["openTicket"]);
         $this->commands['holdTicket'] = strtoupper($this->getConfig()->get("command")["holdTicket"]);
@@ -119,10 +119,10 @@ class ReportRTS extends PluginBase {
         $this->commands['listStaff'] = strtoupper($this->getConfig()->get("command")["listStaff"]);
 
         # Setup notification array.
-        $this->notifications = array();
+        $this->notifications = [];
 
         # Setup staff array.
-        $this->staff = array();
+        $this->staff = [];
 
     }
 
