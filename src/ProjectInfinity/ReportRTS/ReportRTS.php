@@ -80,6 +80,9 @@ class ReportRTS extends PluginBase {
         $this->ticketNagHeld = $this->getConfig()->get("ticket")["nagHeld"];
         $this->ticketHideOffline= $this->getConfig()->get("ticket")["hideOffline"];
 
+        # Set up ticket array.
+        self::$tickets = [];
+
         # Set up storage.
         $provider = $this->getConfig()->get("storage")["type"];
         unset($this->provider);
@@ -98,9 +101,6 @@ class ReportRTS extends PluginBase {
         if(!isset($this->provider) or !($this->provider instanceof DataProvider)) {
             $this->provider = $provider;
         }
-
-        # Set up ticket array. NOTE: This contains fake tickets until a storage system has been developed.
-        self::$tickets = [];
 
         # Make sure the array is sorted correctly, later this should be done after loading all data from a database.
         ksort(ReportRTS::$tickets);

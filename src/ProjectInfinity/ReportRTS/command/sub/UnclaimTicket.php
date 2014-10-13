@@ -55,7 +55,7 @@ class UnclaimTicket {
 
         $ticket = ReportRTS::$tickets[$args[1]];
 
-        $timestamp = round(microtime(true) * 1000);
+        $timestamp = round(microtime(true));
 
         if($resultCode = $this->data->setTicketStatus($ticketId, $sender->getName(), 0, null, 0, $timestamp) and $resultCode != 1) {
 

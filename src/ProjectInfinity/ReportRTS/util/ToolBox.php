@@ -121,7 +121,7 @@ const DAY_MILLIS = 86400000; # 24 * HOUR_MILLIS;
         foreach(ReportRTS::$tickets as $ticket) {
             if($ticket->getName() == $username) {
                 if($ticket->getTimestamp() > (microtime(true) - $delay)) {
-                    return round($ticket->getTimestamp() - ((microtime(true) - $delay)));
+                    return $ticket->getTimestamp() - ((microtime(true) - $delay));
                 }
             }
         }

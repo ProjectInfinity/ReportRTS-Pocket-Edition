@@ -44,10 +44,27 @@ class MySQLDataProvider implements DataProvider {
         $this->plugin->getServer()->getScheduler()->scheduleRepeatingTask(new MySQLKeepAliveTask($this->plugin, $this->database), 600);
 
         $this->plugin->getLogger()->info("Connected using MySQL");
+
+        ReportRTS::$tickets = $this->load();
     }
 
     public function close() {
         $this->database->close();
+    }
+
+    /** @return Ticket[] */
+    private function load() {
+        $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status = '0' ORDER BY ticket.id ASC");
+        $temp = [];
+        while($row = $result->fetch_array()) {
+            var_dump($row['timestamp']);
+            $ticket = new Ticket($row[0], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
+                $row['pitch'], $row['timestamp'], $row['staffTime'], $row['text'], $row['name'], $row['world'], null, $row['comment']);
+            $temp[$row[0]] = $ticket;
+        }
+
+        $result->close();
+        return $temp;
     }
 
     public function createUser($username) {
@@ -120,22 +137,22 @@ class MySQLDataProvider implements DataProvider {
 
             # Ticket is unresolved.
             case 0:
-                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.id = user.id WHERE ticket.status = '0' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status = '0' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
                 break;
 
             # Ticket is claimed.
             case 1:
-                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.id = user.id WHERE ticket.status = '1' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status = '1' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
                 break;
 
             # Ticket is on hold.
             case 2:
-                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.id = user.id WHERE ticket.status = '2' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status = '2' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
                 break;
 
             # Ticket is closed.
             case 3:
-                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.id = user.id WHERE ticket.status = '3' ORDER BY ticket.id DESC LIMIT ".$cursor.",".$limit);
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status = '3' ORDER BY ticket.id DESC LIMIT ".$cursor.",".$limit);
                 break;
         }
         return $result;

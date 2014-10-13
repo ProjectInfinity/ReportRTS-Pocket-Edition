@@ -79,7 +79,7 @@ class OpenTicket {
             }
         }
 
-        $timestamp = round(microtime(true) * 1000);
+        $timestamp = round(microtime(true));
         $ticketId = $this->data->createTicket($sender->getName(), $location->getLevel()->getName(), $location, $yaw, $pitch, $message, $timestamp);
 
         if($ticketId <= 0) {

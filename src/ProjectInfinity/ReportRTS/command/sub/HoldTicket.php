@@ -47,7 +47,7 @@ class HoldTicket {
 
         $reason = implode(" ", array_filter($args));
 
-        if($resultCode = $this->data->setTicketStatus($ticketId, $sender->getName(), 2, $reason, 0, round(microtime(true) * 1000)) and $resultCode != 1) {
+        if($resultCode = $this->data->setTicketStatus($ticketId, $sender->getName(), 2, $reason, 0, round(microtime(true))) and $resultCode != 1) {
             if($resultCode == -1) {
                 # Username is invalid or does not exist.
                 $sender->sendMessage(sprintf(MessageHandler::$userNotExists, $sender->getName()));
