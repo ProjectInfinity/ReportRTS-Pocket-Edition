@@ -47,7 +47,7 @@ class RTSListener implements Listener {
         # Check if player is staff and add to array if true.
         if($event->getPlayer()->hasPermission(PermissionHandler::isStaff)) {
             array_push($this->plugin->staff, $event->getPlayer()->getName());
-            array_unique($this->plugin->staff);
+            $this->plugin->staff = array_unique($this->plugin->staff);
         }
     }
 
