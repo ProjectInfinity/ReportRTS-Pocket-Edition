@@ -80,7 +80,9 @@ class CloseTicket {
             $player->sendMessage(sprintf(MessageHandler::$ticketClaimText, $ticket->getMessage(), trim($comment)));
             // TODO: Add notification if not online.
         }
-        // $player->sendMessage(sprintf(MessageHandler::$ticketClose, $ticketId, $sender->getName()));
+
+        # Let staff know about the ticket change.
+        $this->plugin->messageStaff(sprintf(MessageHandler::$ticketClose, $ticketId, $sender->getName()));
 
         # Remove the ticket if it is located in the ticket array.
         if(isset(ReportRTS::$tickets[$ticketId])) {
