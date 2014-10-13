@@ -215,9 +215,21 @@ class MySQLDataProvider implements DataProvider {
         return $result;
     }
 
-    public function setNotificationStatus($id, $status)
-    {
-        // TODO: Implement setNotificationStatus() method.
+    public function setNotificationStatus($id, $status) {
+
+        # If -1 is returned then either the ID is not a number or the status is not a boolean.
+        if(!ToolBox::isNumber($id) or !is_bool($status)) return -1;
+
+        $id = intval($id);
+        $status = $status ? 1 : 0 ;
+
+        $stmt = $this->database->prepare("UPDATE `reportrts_tickets` SET `notified` = ? WHERE `id` = ?");
+        $stmt->bind_param('ii', $id, $status);
+        $stmt->execute();
+        $result = $stmt->affected_rows > 0 ? 1 : 0;
+        $stmt->close();
+
+        return $result;
     }
 
     public function setUserStatus($username, $status)

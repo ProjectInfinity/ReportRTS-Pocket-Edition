@@ -77,9 +77,9 @@ class CloseTicket {
         if($player != null) {
             # User is online! Let's message them.
             $player->sendMessage(sprintf(MessageHandler::$ticketCloseUser, $sender->getName()));
-            $player->sendMessage(sprintf(MessageHandler::$ticketClaimText, $ticket->getMessage(), trim($comment)));
+            $player->sendMessage(sprintf(MessageHandler::$ticketCloseText, $ticket->getMessage(), trim($comment)));
         } else {
-            $this->plugin->notifications[$ticketId] = $ticket->getName();
+            $this->plugin->notifications[$ticketId] = $ticket;
         }
 
         # Let staff know about the ticket change.

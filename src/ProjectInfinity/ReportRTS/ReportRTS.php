@@ -31,6 +31,7 @@ class ReportRTS extends PluginBase {
     # Array containing all online staff members (users with reportrts.staff).
     public $staff;
     # Array containing all waiting notifications.
+    /** @var Ticket[] */
     public $notifications;
 
     public $debug;

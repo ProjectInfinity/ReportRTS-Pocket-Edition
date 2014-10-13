@@ -25,8 +25,10 @@ class MessageHandler {
     public static $ticketNotOpen;
     public static $ticketNotClaimed;
     public static $ticketClose;
+    public static $ticketCloseMulti;
     public static $ticketCloseUser;
     public static $ticketCloseText;
+    public static $ticketCloseOffline;
     public static $ticketClaim;
     public static $ticketClaimUser;
     public static $ticketClaimText;
@@ -59,8 +61,10 @@ class MessageHandler {
         self::$ticketNotOpen = self::parseColors('%red%Specified ticket is not open.');
         self::$ticketNotClaimed = self::parseColors('%red%You may only unclaim tickets that are claimed.');
         self::$ticketClose = self::parseColors('%gold%Ticket #%u was closed by %s.');
+        self::$ticketCloseMulti = self::parseColors('%gold%While you were gone, %u tickets were closed.  Use /%s to check your currently open tickets.');
         self::$ticketCloseUser = self::parseColors('%gold%%s completed your ticket.');
         self::$ticketCloseText = self::parseColors('%gold%Ticket text: %yellow%%s %gold%Comment: %yellow%%s');
+        self::$ticketCloseOffline = self::parseColors('%gold%One of your tickets have been closed while you were offline.');
         self::$ticketClaim = self::parseColors('%gold%%s is now handling ticket #%u.');
         self::$ticketClaimUser = self::parseColors('%gold%%s is now handling your ticket.');
         self::$ticketUnclaim = self::parseColors('%gold%%s is no longer handling ticket #%u.');
