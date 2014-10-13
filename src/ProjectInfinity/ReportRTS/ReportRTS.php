@@ -25,7 +25,7 @@ class ReportRTS extends PluginBase {
 
     # Array containing all tickets.
     /** @var Ticket[]  */
-    public static $tickets = array();
+    public static $tickets = [];
     # Array containing all configurable sub-commands.
     public $commands;
     # Array containing all online staff members (users with reportrts.staff).
