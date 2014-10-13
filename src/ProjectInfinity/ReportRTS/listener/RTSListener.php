@@ -52,10 +52,8 @@ class RTSListener implements Listener {
     }
 
     public function onPlayerQuit(PlayerQuitEvent $event) {
-        # TODO: This needs testing, if it works then remove this comment.
-        if(($staff = array_search($event->getPlayer()->getName(), $this->plugin->staff)) !== false) {
-            unset($$this->plugin->staff[$staff]);
-        }
+
+        if(($staff = array_search($event->getPlayer()->getName(), $this->plugin->staff)) !== false) unset($this->plugin->staff[$staff]);
     }
 
     public function onSignChange(SignChangeEvent $event) {
