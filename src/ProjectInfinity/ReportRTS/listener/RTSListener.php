@@ -27,12 +27,10 @@ class RTSListener implements Listener {
 
     public function onPlayerJoin(PlayerJoinEvent $event) {
         if(count($this->plugin->notifications) > 0) {
-            # TODO: Do something because there are pending notifications!
             /** @var Ticket[] $found */
             $found = [];
             foreach($this->plugin->notifications as $ticket => $player) {
                 if(strtoupper($player) != strtoupper($event->getPlayer()->getName())) continue;
-                # L43#RTSListener.java
                 # Store found ticket for later use.
                 array_push($found, $ticket);
             }
@@ -63,7 +61,6 @@ class RTSListener implements Listener {
         $sign = $block->getText();
         if($sign[0] != "[help]") return;
 
-        // TODO: Process.
         $message = ToolBox::cleanSign($sign);
         if(strlen($message) == 0) {
             $event->getPlayer()->sendMessage(sprintf(MessageHandler::$generalError, "Sign syntax is invalid."));
@@ -71,8 +68,8 @@ class RTSListener implements Listener {
             $event->getBlock()->level->useBreakOn($event->getBlock(), $item = null, null);
             return;
         }
-        # TODO: Check if user has >= $ticketMax open.
 
+        # Fire command.
+        $this->plugin->getServer()->dispatchCommand($event->getPlayer(), "ticket ".$this->plugin->commands['openTicket']." ".$message);
     }
-
 }
