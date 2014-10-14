@@ -101,6 +101,12 @@ class ReadTicket {
         return true;
     }
 
+    /**
+     * View the specified page of held tickets.
+     * @param CommandSender $sender
+     * @param $page
+     * @return bool
+     */
     private function viewHeld(CommandSender $sender, $page) {
 
         if(!$sender->hasPermission(PermissionHandler::canReadAll)) {
@@ -110,20 +116,9 @@ class ReadTicket {
 
         # Set cursor start position.
         $i = ($page * $this->plugin->ticketPerPage) - $this->plugin->ticketPerPage;
-        $heldCount = 0;
 
-        $result = null;
-        try {
-            $heldCount = $this->data->countTickets(2);
-            $data = $this->data->getTickets($i, $this->plugin->ticketPerPage, 2);
-            $result = $data->fetch_assoc();
-            $data->close();
-
-        } catch(Exception $e) {
-            $sender->sendMessage(sprintf(MessageHandler::$generalError, "Cannot read held tickets, check the console for errors."));
-            $this->plugin->getLogger()->error($e->getMessage());
-            $this->plugin->getLogger()->error("Line: ".$e->getLine()." in ".$e->getFile());
-        }
+        $heldCount = $this->data->countTickets(2);
+        $data = $this->data->getTickets($i, $this->plugin->ticketPerPage, 2);
 
         $sender->sendMessage(TextFormat::AQUA."--------- ".$heldCount." Tickets -".TextFormat::YELLOW." Held ".TextFormat::AQUA."---------");
         if($heldCount == 0) {
@@ -132,16 +127,22 @@ class ReadTicket {
         }
 
         # Loop tickets if any.
-        while($row = $result) {
-            $online = ToolBox::isOnline($result['name']) ? TextFormat::GREEN : TextFormat::RED;
-            $substring = ToolBox::shortenMessage($result['text']);
+        while($row = $data->fetch_array()) {
+            $online = ToolBox::isOnline($row['name']) ? TextFormat::GREEN : TextFormat::RED;
+            $substring = ToolBox::shortenMessage($row['text']);
 
-
-            # TODO: Test below later when all required classes have been made.
-            $sender->sendMessage(TextFormat::GOLD."#".$result['id']." ".date("d-m-Y h:i:s", $row['timestamp'])." by ".$online.$result['name'].TextFormat::GOLD." - ".TextFormat::GRAY.$substring);
+            $sender->sendMessage(TextFormat::GOLD."#".$row[0]." ".date("d-m-Y h:i:s", $row['timestamp'])." by ".$online.$row['name'].TextFormat::GOLD." - ".TextFormat::GRAY.$substring);
         }
+        $data->close();
         return true;
     }
+
+    /**
+     * View closed tickets.
+     * @param CommandSender $sender
+     * @param $page
+     * @return bool
+     */
     private function viewClosed(CommandSender $sender, $page) {
 
         if(!$sender->hasPermission(PermissionHandler::canReadAll)) {
@@ -151,36 +152,25 @@ class ReadTicket {
 
         # Set cursor start position.
         $i = ($page * $this->plugin->ticketPerPage) - $this->plugin->ticketPerPage;
-        $count = 0;
 
-        $result = null;
-        try {
-            $count = $this->data->countTickets(3);
-            $data = $this->data->getTickets($i, $this->plugin->ticketPerPage, 3);
-            $result = $data->fetch_assoc();
-            $data->close();
+        $count = $this->data->countTickets(3);
+        $data = $this->data->getTickets($i, $this->plugin->ticketPerPage, 3);
 
-        } catch(Exception $e) {
-            $sender->sendMessage(sprintf(MessageHandler::$generalError, "Cannot read closed tickets, check the console for errors."));
-            $this->plugin->getLogger()->error($e->getMessage());
-            $this->plugin->getLogger()->error("Line: ".$e->getLine()." in ".$e->getFile());
-        }
-
-        $sender->sendMessage(TextFormat::AQUA."--------- ".$count." Tickets -".TextFormat::YELLOW." Held ".TextFormat::AQUA."---------");
+        $sender->sendMessage(TextFormat::AQUA."--------- ".$count." Tickets -".TextFormat::YELLOW." Closed ".TextFormat::AQUA."---------");
         if($count == 0) {
             $sender->sendMessage(MessageHandler::$noTickets);
             return true;
         }
 
         # Loop tickets if any.
-        while($row = $result) {
-            $online = ToolBox::isOnline($result['name']) ? TextFormat::GREEN : TextFormat::RED;
-            $substring = ToolBox::shortenMessage($result['text']);
+        while($row = $data->fetch_array()) {
+            $online = ToolBox::isOnline($row['name']) ? TextFormat::GREEN : TextFormat::RED;
+            $substring = ToolBox::shortenMessage($row['text']);
 
-
-            # TODO: Test below later when all required classes have been made.
-            $sender->sendMessage(TextFormat::GOLD."#".$result['id']." ".date("d-m-Y h:i:s", $row['timestamp'])." by ".$online.$result['name'].TextFormat::GOLD." - ".TextFormat::GRAY.$substring);
+            $sender->sendMessage(TextFormat::GOLD."#".$row[0]." ".date("d-m-Y h:i:s", $row['timestamp'])." by ".$online.$row['name'].TextFormat::GOLD." - ".TextFormat::GRAY.$substring);
         }
+        $data->close();
+
         return true;
     }
 
@@ -220,5 +210,72 @@ class ReadTicket {
         return true;
     }
 
-    private function viewId($sender, $id) {}
+    /**
+     * View a specific ticket.
+     * @param CommandSender $sender
+     * @param $id
+     * @return bool
+     */
+    private function viewId(CommandSender $sender, $id) {
+
+        if(!$sender->hasPermission(PermissionHandler::canReadAll)) {
+            $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canReadAll));
+            return true;
+        }
+
+        if(!ToolBox::isNumber($id)) {
+            $sender->sendMessage(sprintf(MessageHandler::$generalError, "Ticket ID has to be a number."));
+            return true;
+        }
+
+        $ticket = null;
+
+        if(isset(ReportRTS::$tickets[$id]))
+            $ticket = ReportRTS::$tickets[$id];
+        else
+            $ticket = $this->data->getTicket($id);
+
+        if($ticket == null) {
+            $sender->sendMessage(sprintf(MessageHandler::$ticketNotExists, $id));
+            return true;
+        }
+
+        $online = ToolBox::isOnline($ticket->getName()) ? TextFormat::GREEN : TextFormat::RED;
+        $date = date("d-m-Y h:i:s", $ticket->getTimestamp());
+
+        $status = null;
+        $statusColor = null;
+
+        if($ticket->getStatus() == 0) {
+            $status = "Open";
+            $statusColor = TextFormat::YELLOW;
+        }
+        if($ticket->getStatus() == 1) {
+            $status = "Claimed";
+            $statusColor = TextFormat::RED;
+        }
+        if($ticket->getStatus() == 2) {
+            $status = "On Hold";
+            $statusColor = TextFormat::LIGHT_PURPLE;
+        }
+        if($ticket->getStatus() == 3) {
+            $status = "Closed";
+            $statusColor = TextFormat::GREEN;
+        }
+
+        # Compile response.
+        $sender->sendMessage(TextFormat::AQUA."--------- ".TextFormat::YELLOW."Ticket #".$ticket->getId()." - ".$statusColor.$status.TextFormat::AQUA."---------");
+        $sender->sendMessage(TextFormat::YELLOW."Opened by ".$online.$ticket->getName().TextFormat::YELLOW." at ".TextFormat::GREEN.$date.
+        " at X:".TextFormat::GREEN.$ticket->getX().TextFormat::YELLOW.", Y:".TextFormat::GREEN.$ticket->getY().TextFormat::YELLOW.", Z:".
+        TextFormat::GREEN.$ticket->getZ());
+        $sender->sendMessage(TextFormat::GRAY.$ticket->getMessage());
+
+        if($ticket->getStatus() == 1) {
+            $time = round(microtime(true)) - $ticket->getStaffTimestamp();
+            $sender->sendMessage(sprintf(TextFormat::LIGHT_PURPLE."Claimed for: %u hours, %u minutes, %u seconds by %s",
+                $time/(1000*60*60), ($time%(1000*60*60))/(1000*60), (($time%(1000*60*60))%(1000*60))/1000), $ticket->getStaffName());
+        }
+
+        if($ticket->getComment() != null and $ticket->getStatus() >= 2) $sender->sendMessage(TextFormat::YELLOW."Comment: ".TextFormat::DARK_GREEN.$ticket->getComment());
+    }
 }

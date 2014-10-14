@@ -24,6 +24,7 @@ class MessageHandler {
     public static $ticketOpenedStaff;
     public static $ticketNotOpen;
     public static $ticketNotClaimed;
+    public static $ticketNotExists;
     public static $ticketClose;
     public static $ticketCloseMulti;
     public static $ticketCloseUser;
@@ -60,6 +61,7 @@ class MessageHandler {
         self::$ticketOpenedStaff = self::parseColors('%green%A new ticket has been opened by %s, id assigned #%u.');
         self::$ticketNotOpen = self::parseColors('%red%Specified ticket is not open.');
         self::$ticketNotClaimed = self::parseColors('%red%You may only unclaim tickets that are claimed.');
+        self::$ticketNotExists = self::parseColors('%red%Ticket #%u does not exist.');
         self::$ticketClose = self::parseColors('%gold%Ticket #%u was closed by %s.');
         self::$ticketCloseMulti = self::parseColors('%gold%While you were gone, %u tickets were closed.  Use /%s to check your currently open tickets.');
         self::$ticketCloseUser = self::parseColors('%gold%%s completed your ticket.');
