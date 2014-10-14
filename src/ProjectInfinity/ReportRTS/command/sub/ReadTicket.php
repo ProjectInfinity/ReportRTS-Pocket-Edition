@@ -114,7 +114,7 @@ class ReadTicket {
 
         $result = null;
         try {
-            $heldCount = $this->data->countHeldTickets();
+            $heldCount = $this->data->countTickets(2);
             $data = $this->data->getTickets($i, $this->plugin->ticketPerPage, 2);
             $result = $data->fetch_assoc();
             $data->close();
