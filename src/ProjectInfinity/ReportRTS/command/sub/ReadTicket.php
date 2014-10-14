@@ -143,6 +143,42 @@ class ReadTicket {
         return true;
     }
     private function viewClosed($sender, $page) {}
-    private function viewSelf($sender) {}
+
+    /**
+     * Views the 5 most recent unresolved tickets of
+     * the player sending the command.
+     * @param CommandSender $sender
+     * @return bool
+     */
+    private function viewSelf(CommandSender $sender) {
+
+        if(!$sender->hasPermission(PermissionHandler::canReadSelf)) {
+            $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canReadSelf));
+            return true;
+        }
+
+        $open = 0;
+        $i = 0;
+        foreach($this->plugin->getTickets() as $ticket) if(strtoupper($sender->getName()) == strtoupper($ticket->getName())) $open++;
+
+        $sender->sendMessage(TextFormat::AQUA."--------- ".TextFormat::YELLOW."You have ".$open." unresolved tickets".TextFormat::AQUA."---------");
+        if($open == 0) $sender->sendMessage(TextFormat::GOLD."You have no open tickets at this time.");
+
+        foreach($this->plugin->getTickets() as $ticket) {
+            $i++;
+            if($i > 5) break;
+
+            $substring = ToolBox::shortenMessage($ticket->getMessage());
+            # If the ticket is claimed, we should specify so by altering the text and colour of it.
+            $substring = ($ticket->getStatus() == 1) ? TextFormat::LIGHT_PURPLE."Claimed by ".$ticket->getStaffName() : TextFormat::GRAY.$substring;
+            # Send final message.
+            $sender->sendMessage(TextFormat::GOLD."#".$ticket->getId()." ".ToolBox::timeSince($ticket->getTimestamp())." by ".
+                (ToolBox::isOnline($ticket->getName()) ? TextFormat::GREEN : TextFormat::RED).$ticket->getName().TextFormat::GOLD." - ".$substring);
+        }
+
+
+        return true;
+    }
+
     private function viewId($sender, $id) {}
 }
