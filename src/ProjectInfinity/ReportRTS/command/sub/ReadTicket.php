@@ -266,16 +266,18 @@ class ReadTicket {
         # Compile response.
         $sender->sendMessage(TextFormat::AQUA."--------- ".TextFormat::YELLOW."Ticket #".$ticket->getId()." - ".$statusColor.$status.TextFormat::AQUA."---------");
         $sender->sendMessage(TextFormat::YELLOW."Opened by ".$online.$ticket->getName().TextFormat::YELLOW." at ".TextFormat::GREEN.$date.
-        " at X:".TextFormat::GREEN.$ticket->getX().TextFormat::YELLOW.", Y:".TextFormat::GREEN.$ticket->getY().TextFormat::YELLOW.", Z:".
+        TextFormat::YELLOW." at X:".TextFormat::GREEN.$ticket->getX().TextFormat::YELLOW.", Y:".TextFormat::GREEN.$ticket->getY().TextFormat::YELLOW.", Z:".
         TextFormat::GREEN.$ticket->getZ());
         $sender->sendMessage(TextFormat::GRAY.$ticket->getMessage());
 
         if($ticket->getStatus() == 1) {
             $time = round(microtime(true)) - $ticket->getStaffTimestamp();
             $sender->sendMessage(sprintf(TextFormat::LIGHT_PURPLE."Claimed for: %u hours, %u minutes, %u seconds by %s",
-                $time/(1000*60*60), ($time%(1000*60*60))/(1000*60), (($time%(1000*60*60))%(1000*60))/1000), $ticket->getStaffName());
+                $time/(1000*60*60), ($time%(1000*60*60))/(1000*60), (($time%(1000*60*60))%(1000*60))/1000, $ticket->getStaffName()));
         }
 
         if($ticket->getComment() != null and $ticket->getStatus() >= 2) $sender->sendMessage(TextFormat::YELLOW."Comment: ".TextFormat::DARK_GREEN.$ticket->getComment());
+
+        return true;
     }
 }

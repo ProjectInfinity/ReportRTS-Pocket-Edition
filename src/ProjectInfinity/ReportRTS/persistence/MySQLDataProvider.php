@@ -177,8 +177,10 @@ class MySQLDataProvider implements DataProvider {
     /** @return Ticket */
     public function getTicket($id) {
         if(!ToolBox::isNumber($id)) return null;
-        $ticket = $this->database->query("SELECT * FROM `reportrts_tickets` WHERE `id` = '$id' LIMIT 1")->fetch_row();
-
+        $row = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.id = '$id' LIMIT 1")->fetch_array();
+        $ticket = new Ticket($row[0], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
+            $row['pitch'], $row['timestamp'], $row['staffTime'], $row['text'], $row['name'], $row['world'], null, $row['comment']);
+        if($ticket->getId() == null) return null;
         return $ticket;
     }
 
