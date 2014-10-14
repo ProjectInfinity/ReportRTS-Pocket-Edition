@@ -57,7 +57,6 @@ class MySQLDataProvider implements DataProvider {
         $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status = '0' ORDER BY ticket.id ASC");
         $temp = [];
         while($row = $result->fetch_array()) {
-            var_dump($row['timestamp']);
             $ticket = new Ticket($row[0], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
                 $row['pitch'], $row['timestamp'], $row['staffTime'], $row['text'], $row['name'], $row['world'], null, $row['comment']);
             $temp[$row[0]] = $ticket;
