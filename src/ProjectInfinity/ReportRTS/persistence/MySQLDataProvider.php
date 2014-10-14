@@ -109,9 +109,26 @@ class MySQLDataProvider implements DataProvider {
         return 0;
     }
 
-    public function countTickets()
-    {
-        // TODO: Implement countTickets() method.
+    /**
+     * Gets a number quoting the amount of tickets of current status.
+     * If no status is specified it defaults to 4 which is a non-valid
+     * status, and should be parsed as ALL tickets.
+     * @param int $status
+     * @return int
+     */
+    public function countTickets($status = 4) {
+
+        $query = null;
+        if($status < 4) {
+            $query = $this->database->query("SELECT COUNT(*) FROM `reportrts_tickets` WHERE `status` = '$status'");
+        } else {
+            $query = $this->database->query("SELECT COUNT(*) FROM `reportrts_tickets`");
+        }
+
+        $result = $query->fetch_row();
+        $query->close();
+
+        return intval($result[0]);
     }
 
     public function deleteEntry($table, $id)

@@ -142,7 +142,47 @@ class ReadTicket {
         }
         return true;
     }
-    private function viewClosed($sender, $page) {}
+    private function viewClosed(CommandSender $sender, $page) {
+
+        if(!$sender->hasPermission(PermissionHandler::canReadAll)) {
+            $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canReadAll));
+            return true;
+        }
+
+        # Set cursor start position.
+        $i = ($page * $this->plugin->ticketPerPage) - $this->plugin->ticketPerPage;
+        $count = 0;
+
+        $result = null;
+        try {
+            $count = $this->data->countTickets(3);
+            $data = $this->data->getTickets($i, $this->plugin->ticketPerPage, 3);
+            $result = $data->fetch_assoc();
+            $data->close();
+
+        } catch(Exception $e) {
+            $sender->sendMessage(sprintf(MessageHandler::$generalError, "Cannot read closed tickets, check the console for errors."));
+            $this->plugin->getLogger()->error($e->getMessage());
+            $this->plugin->getLogger()->error("Line: ".$e->getLine()." in ".$e->getFile());
+        }
+
+        $sender->sendMessage(TextFormat::AQUA."--------- ".$count." Tickets -".TextFormat::YELLOW." Held ".TextFormat::AQUA."---------");
+        if($count == 0) {
+            $sender->sendMessage(MessageHandler::$noTickets);
+            return true;
+        }
+
+        # Loop tickets if any.
+        while($row = $result) {
+            $online = ToolBox::isOnline($result['name']) ? TextFormat::GREEN : TextFormat::RED;
+            $substring = ToolBox::shortenMessage($result['text']);
+
+
+            # TODO: Test below later when all required classes have been made.
+            $sender->sendMessage(TextFormat::GOLD."#".$result['id']." ".date("d-m-Y h:i:s", $row['timestamp'])." by ".$online.$result['name'].TextFormat::GOLD." - ".TextFormat::GRAY.$substring);
+        }
+        return true;
+    }
 
     /**
      * Views the 5 most recent unresolved tickets of
