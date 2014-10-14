@@ -129,6 +129,15 @@ class Ticket {
     }
 
     /**
+     * Returns the ID of the staff member that last interacted
+     * with the ticket, if any.
+     * @return Int|null
+     */
+    public function getStaffId() {
+        return $this->staffId;
+    }
+
+    /**
      * Returns the comment that was made when handling the ticket, if any.
      * @return String
      */
@@ -174,6 +183,10 @@ class Ticket {
 
     public function setStaffName($staffName) {
         $this->staffName = $staffName;
+    }
+
+    public function setStaffId($staffId) {
+        $this->staffId = $staffId;
     }
 
     public function setX($x) {

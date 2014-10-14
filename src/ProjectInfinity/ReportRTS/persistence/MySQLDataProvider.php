@@ -59,6 +59,7 @@ class MySQLDataProvider implements DataProvider {
         while($row = $result->fetch_array()) {
             $ticket = new Ticket($row[0], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
                 $row['pitch'], $row['timestamp'], $row['staffTime'], $row['text'], $row['name'], $row['world'], null, $row['comment']);
+            if($ticket->getStatus() > 0) $ticket->setStaffName($this->getUser(null, $ticket->getStaffId())['username']);
             $temp[$row[0]] = $ticket;
         }
 
@@ -214,11 +215,6 @@ class MySQLDataProvider implements DataProvider {
         // TODO: Implement getStats() method.
     }
 
-    public function getUsername($userId)
-    {
-        // TODO: Implement getUsername() method.
-    }
-
     public function setTicketStatus($id, $username, $status, $comment, $notified, $timestamp) {
 
         if(!isset(ReportRTS::$tickets[$id])) {
@@ -294,11 +290,20 @@ class MySQLDataProvider implements DataProvider {
 
     /**
      * @param $username
+     * @param $id;
      * @return Array
      */
-    public function getUser($username) {
-        $sql = $this->database->prepare("SELECT * FROM `reportrts_users` WHERE `name` = ? LIMIT 1");
-        $sql->bind_param("s", $username);
+    public function getUser($username = null, $id = 0) {
+        $sql = null;
+        if($username != null) {
+            $sql = $this->database->prepare("SELECT * FROM `reportrts_users` WHERE `name` = ? LIMIT 1");
+            $sql->bind_param("s", $username);
+        }
+        if($username == null and $id > 0) {
+            $sql = $this->database->prepare("SELECT * FROM `reportrts_users` WHERE `id` = ?");
+            $sql->bind_param("i", $id);
+        }
+
         $sql->execute();
         $sql->bind_result($id, $name, $banned);
         $sql->fetch();

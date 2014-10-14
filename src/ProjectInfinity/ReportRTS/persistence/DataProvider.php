@@ -55,13 +55,13 @@ interface DataProvider {
     public function getHandledBy($username);
     public function getOpenedBy($username);
     public function getStats();
-    public function getUsername($userId);
 
     /**
      * @param $username
+     * @param $id
      * @return Array
      */
-    public function getUser($username);
+    public function getUser($username = null, $id = 0);
 
     public function setTicketStatus($id, $username, $status, $comment, $notified, $timestamp);
     public function setNotificationStatus($id, $status);
