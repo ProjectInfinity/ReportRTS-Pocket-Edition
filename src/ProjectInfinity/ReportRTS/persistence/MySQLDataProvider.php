@@ -283,8 +283,7 @@ class MySQLDataProvider implements DataProvider {
         // TODO: Implement updateTicket() method.
     }
 
-    public function openTicket()
-    {
+    public function openTicket() {
         // TODO: Implement openTicket() method.
     }
 
