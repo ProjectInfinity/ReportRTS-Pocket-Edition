@@ -2,7 +2,6 @@
 
 namespace ProjectInfinity\ReportRTS\command\sub;
 
-use Exception;
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 use ProjectInfinity\ReportRTS\data\Ticket;
@@ -273,7 +272,7 @@ class ReadTicket {
         if($ticket->getStatus() == 1) {
             $time = round(microtime(true)) - $ticket->getStaffTimestamp();
             $sender->sendMessage(sprintf(TextFormat::LIGHT_PURPLE."Claimed for: %u hours, %u minutes, %u seconds by %s",
-                $time/(1000*60*60), ($time%(1000*60*60))/(1000*60), (($time%(1000*60*60))%(1000*60))/1000, $ticket->getStaffName()));
+                $time/(60*60), ($time%(60*60))/(60), (($time%(60*60))%(60)), $ticket->getStaffName()));
         }
 
         if($ticket->getComment() != null and $ticket->getStatus() >= 2) $sender->sendMessage(TextFormat::YELLOW."Comment: ".TextFormat::DARK_GREEN.$ticket->getComment());
