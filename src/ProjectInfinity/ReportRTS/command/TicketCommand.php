@@ -5,6 +5,7 @@ namespace ProjectInfinity\ReportRTS\command;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
+use ProjectInfinity\ReportRTS\command\sub\BroadcastMessage;
 use ProjectInfinity\ReportRTS\command\sub\ClaimTicket;
 use ProjectInfinity\ReportRTS\command\sub\CloseTicket;
 use ProjectInfinity\ReportRTS\command\sub\HoldTicket;
@@ -28,6 +29,7 @@ class TicketCommand implements CommandExecutor {
     private $unclaimCommand;
     private $staffCommand;
     private $teleportCommand;
+    private $broadcastCommand;
 
     public function __construct(ReportRTS $plugin) {
         $this->plugin = $plugin;
@@ -41,6 +43,7 @@ class TicketCommand implements CommandExecutor {
         $this->unclaimCommand = new UnclaimTicket($plugin);
         $this->staffCommand = new ListStaff($plugin);
         $this->teleportCommand = new TeleportTicket($plugin);
+        $this->broadcastCommand = new BroadcastMessage($plugin);
     }
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
@@ -100,7 +103,11 @@ class TicketCommand implements CommandExecutor {
             if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
             $result = $this->staffCommand->handleCommand($sender);
         }
-
+        /** Broadcast to staff **/
+        if(strtoupper($args[0]) == $this->plugin->commands['broadcastToStaff']) {
+            if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
+            $result = $this->broadcastCommand->handleCommand($sender, $args);
+        }
         return $result;
     }
 

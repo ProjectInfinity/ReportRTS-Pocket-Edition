@@ -8,6 +8,8 @@ class MessageHandler {
 
     private static $colors;
 
+    public static $broadcast;
+
     public static $generalError;
     public static $permissionError;
 
@@ -49,6 +51,7 @@ class MessageHandler {
 
     public static function load() {
         self::$colors = (new \ReflectionClass(TextFormat::class))->getConstants();
+        self::$broadcast = self::parseColors('%white%[%red%Staff%white%] %red%%s: %green%%s');
         self::$generalError = self::parseColors('%red%An error occurred. Reference: %s');
         self::$permissionError = self::parseColors('%yellow%You need permission "%s" to do that');
         self::$noTickets = self::parseColors('%white%There are no tickets at this time.');
