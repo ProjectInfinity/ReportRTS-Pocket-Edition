@@ -84,7 +84,12 @@ class MySQLDataProvider implements DataProvider {
 
         # Retrieve user data.
         $user = $this->getUser($sender);
-
+        # Check if user exists.
+        if($user['id'] == 0) {
+            # Create the user since it does not exist.
+            $this->createUser($sender);
+            $user = $this->getUser($sender);
+        }
         # Check if user is banned before processing further.
         if($user['isBanned'] == 1) {
             return -1;
