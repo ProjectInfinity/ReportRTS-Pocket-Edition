@@ -11,6 +11,7 @@ use ProjectInfinity\ReportRTS\command\sub\HoldTicket;
 use ProjectInfinity\ReportRTS\command\sub\ListStaff;
 use ProjectInfinity\ReportRTS\command\sub\OpenTicket;
 use ProjectInfinity\ReportRTS\command\sub\ReadTicket;
+use ProjectInfinity\ReportRTS\command\sub\TeleportTicket;
 use ProjectInfinity\ReportRTS\command\sub\UnclaimTicket;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\ToolBox;
@@ -26,6 +27,7 @@ class TicketCommand implements CommandExecutor {
     private $holdCommand;
     private $unclaimCommand;
     private $staffCommand;
+    private $teleportCommand;
 
     public function __construct(ReportRTS $plugin) {
         $this->plugin = $plugin;
@@ -38,6 +40,7 @@ class TicketCommand implements CommandExecutor {
         $this->holdCommand = new HoldTicket($plugin);
         $this->unclaimCommand = new UnclaimTicket($plugin);
         $this->staffCommand = new ListStaff($plugin);
+        $this->teleportCommand = new TeleportTicket($plugin);
     }
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
@@ -76,6 +79,11 @@ class TicketCommand implements CommandExecutor {
         if(strtoupper($args[0]) == $this->plugin->commands['claimTicket']) {
             if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
             $result = $this->claimCommand->handleCommand($sender, $args);
+        }
+        /** Teleport to a ticket. **/
+        if(strtoupper($args[0]) == $this->plugin->commands['teleportToTicket']) {
+            if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
+            $result = $this->teleportCommand->handleCommand($sender, $args);
         }
         /** Unclaim a ticket. **/
         if(strtoupper($args[0]) == $this->plugin->commands['unclaimTicket']) {
