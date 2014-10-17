@@ -14,6 +14,7 @@ class PermissionHandler {
     const canClaimTicket = "reportrts.command.claim";
     const canHoldTicket = "reportrts.command.hold";
     const canSeeStaff = "reportrts.command.list";
+    const canTeleport = "reportrts.command.teleport";
 
     const bypassTicketLimit = "reportrts.bypass.ticket";
     const bypassTicketClaim = "reportrts.bypass.claim";

@@ -39,6 +39,7 @@ class MessageHandler {
     public static $ticketHoldUser;
     public static $ticketHoldText;
     public static $ticketStatusError;
+    public static $ticketTeleport;
 
     public static $userNotExists;
 
@@ -77,6 +78,7 @@ class MessageHandler {
         self::$ticketHoldText = self::parseColors('%gold%Ticket text: %yellow%%s %gold%Reason: %yellow%%s');
         self::$userNotExists = self::parseColors('%red%The specified user %s does not exist or contains invalid characters.');
         self::$ticketStatusError = self::parseColors('%red%Unable to set ticket status. Check that the status of the ticket does not collide.');
+        self::$ticketTeleport = self::parseColors('%blue%Teleported to ticket #%u.');
         self::$separator = self::parseColors('%yellow%, ');
         self::$staffList = self::parseColors('%aqua%Staff online: %yellow%%s');
     }
