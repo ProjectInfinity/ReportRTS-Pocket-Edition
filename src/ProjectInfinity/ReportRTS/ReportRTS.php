@@ -138,6 +138,7 @@ class ReportRTS extends PluginBase {
             if($player == null) continue;
             $player->sendMessage($message);
         }
+        $this->getLogger()->info($message);
     }
 
     /** @param DataProvider $provider */

@@ -76,6 +76,7 @@ class UnclaimTicket {
         # Set ticket info in the ticket array too.
         $ticket->setStatus(0);
         $ticket->setStaffName(null);
+        $ticket->setStaffId(0);
         $ticket->setStaffTimestamp(null);
         ReportRTS::$tickets[$args[1]] = $ticket;
 
