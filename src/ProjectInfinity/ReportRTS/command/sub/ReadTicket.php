@@ -263,7 +263,7 @@ class ReadTicket {
         }
 
         # Compile response.
-        $sender->sendMessage(TextFormat::AQUA."--------- ".TextFormat::YELLOW."Ticket #".$ticket->getId()." - ".$statusColor.$status.TextFormat::AQUA."---------");
+        $sender->sendMessage(TextFormat::AQUA."--------- ".TextFormat::YELLOW."Ticket #".$ticket->getId()." - ".$statusColor.$status.TextFormat::AQUA." ---------");
         $sender->sendMessage(TextFormat::YELLOW."Opened by ".$online.$ticket->getName().TextFormat::YELLOW." at ".TextFormat::GREEN.$date.
         TextFormat::YELLOW." at X:".TextFormat::GREEN.$ticket->getX().TextFormat::YELLOW.", Y:".TextFormat::GREEN.$ticket->getY().TextFormat::YELLOW.", Z:".
         TextFormat::GREEN.$ticket->getZ());
