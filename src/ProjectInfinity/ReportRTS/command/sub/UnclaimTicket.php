@@ -82,8 +82,8 @@ class UnclaimTicket {
 
         $player = $this->plugin->getServer()->getPlayer($ticket->getName());
         if($player != null) {
-            $player->sendMessage(MessageHandler::$ticketUnclaimUser, $sender->getName());
-            $player->sendMessage(MessageHandler::$ticketClaimText, $ticket->getMessage());
+            $player->sendMessage(sprintf(MessageHandler::$ticketUnclaimUser, $sender->getName()));
+            $player->sendMessage(sprintf(MessageHandler::$ticketClaimText, $ticket->getMessage()));
         }
 
         # Let staff know about this change.

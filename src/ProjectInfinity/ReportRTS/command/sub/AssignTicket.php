@@ -87,8 +87,8 @@ class AssignTicket {
 
         $player = $this->plugin->getServer()->getPlayer($ticket->getName());
         if($player != null) {
-            $player->sendMessage(MessageHandler::$ticketAssignUser, $user['username']);
-            $player->sendMessage(MessageHandler::$ticketClaimText, $ticket->getMessage());
+            $player->sendMessage(sprintf(MessageHandler::$ticketAssignUser, $user['username']));
+            $player->sendMessage(sprintf(MessageHandler::$ticketClaimText, $ticket->getMessage()));
         }
 
         # Let staff know about this change.
