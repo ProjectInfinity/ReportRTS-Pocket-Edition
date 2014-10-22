@@ -14,6 +14,7 @@ use ProjectInfinity\ReportRTS\command\sub\HoldTicket;
 use ProjectInfinity\ReportRTS\command\sub\ListStaff;
 use ProjectInfinity\ReportRTS\command\sub\OpenTicket;
 use ProjectInfinity\ReportRTS\command\sub\ReadTicket;
+use ProjectInfinity\ReportRTS\command\sub\ReopenTicket;
 use ProjectInfinity\ReportRTS\command\sub\TeleportTicket;
 use ProjectInfinity\ReportRTS\command\sub\UnclaimTicket;
 use ProjectInfinity\ReportRTS\ReportRTS;
@@ -33,6 +34,7 @@ class TicketCommand implements CommandExecutor {
     private $teleportCommand;
     private $broadcastCommand;
     private $assignCommand;
+    private $reopenCommand;
 
     public function __construct(ReportRTS $plugin) {
         $this->plugin = $plugin;
@@ -48,6 +50,7 @@ class TicketCommand implements CommandExecutor {
         $this->teleportCommand = new TeleportTicket($plugin);
         $this->broadcastCommand = new BroadcastMessage($plugin);
         $this->assignCommand = new AssignTicket($plugin);
+        $this->reopenCommand = new ReopenTicket($plugin);
     }
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
@@ -116,6 +119,11 @@ class TicketCommand implements CommandExecutor {
         if(strtoupper($args[0]) == $this->plugin->commands['assignTicket']) {
             if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
             $result = $this->assignCommand->handleCommand($sender, $args);
+        }
+        /** Reopen a ticket. **/
+        if(strtoupper($args[0]) == $this->plugin->commands['reopenTicket']) {
+            if($this->plugin->debug) $this->plugin->getLogger()->info($sender->getName()." ".get_class($this)." took ".ToolBox::getTimeSpent($start)."ms, ".$command->getName()." ".implode(" ", $args));
+            $result = $this->reopenCommand->handleCommand($sender, $args);
         }
         return $result;
     }
