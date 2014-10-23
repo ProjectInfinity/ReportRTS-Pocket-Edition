@@ -4,6 +4,9 @@ namespace ProjectInfinity\ReportRTS\command\sub;
 
 use pocketmine\command\CommandSender;
 use ProjectInfinity\ReportRTS\ReportRTS;
+use ProjectInfinity\ReportRTS\util\MessageHandler;
+use ProjectInfinity\ReportRTS\util\PermissionHandler;
+use ProjectInfinity\ReportRTS\util\ToolBox;
 
 class ReopenTicket {
 
@@ -16,6 +19,44 @@ class ReopenTicket {
     }
 
     public function handleCommand(CommandSender $sender, $args) {
+
+        if(!$sender->hasPermission(PermissionHandler::canReopenTicket)) {
+            $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canReopenTicket));
+            return true;
+        }
+
+        if(count($args) < 2 or !ToolBox::isNumber($args[1])) {
+            $sender->sendMessage(sprintf(MessageHandler::$generalError, 'Correct syntax is: "/<command> <reopen> <id>"'));
+            return true;
+        }
+
+        $ticketId = intval($args[1]);
+
+        if($resultCode = $this->data->setTicketStatus($ticketId, $sender->getName(), 2, "", 0, round(microtime(true))) and $resultCode != 1) {
+            if($resultCode == -1) {
+                # Username is invalid or does not exist.
+                $sender->sendMessage(sprintf(MessageHandler::$userNotExists, $sender->getName()));
+                return true;
+            }
+            if($resultCode == -2) {
+                # Ticket status incompatibilities.
+                $sender->sendMessage(MessageHandler::$ticketStatusError);
+                return true;
+            }
+            $sender->sendMessage(sprintf(MessageHandler::$generalError, "Unable to reopen ticket #".$ticketId));
+            return true;
+        }
+
+        ReportRTS::$tickets[$ticketId] = $this->data->getTicket($ticketId);
+
+        # Check if ticket is open or not. You can't put a held or closed ticket on hold.
+        if(!isset(ReportRTS::$tickets[$ticketId])) {
+            $sender->sendMessage(sprintf(MessageHandler::$generalError, "Something went wrong! Ticket did not enter the ticket array."));
+            return true;
+        }
+
+        $this->plugin->messageStaff(sprintf(MessageHandler::$ticketReopen, $sender->getName(), $ticketId));
+        $this->plugin->messageStaff(sprintf(MessageHandler::$ticketReopen, $ticketId));
 
         return true;
     }

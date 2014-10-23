@@ -44,6 +44,8 @@ class MessageHandler {
     public static $ticketHoldText;
     public static $ticketStatusError;
     public static $ticketTeleport;
+    public static $ticketReopen;
+    public static $ticketReopenSelf;
 
     public static $userNotExists;
 
@@ -88,6 +90,8 @@ class MessageHandler {
         self::$ticketTeleport = self::parseColors('%blue%Teleported to ticket #%u.');
         self::$separator = self::parseColors('%yellow%, ');
         self::$staffList = self::parseColors('%aqua%Staff online: %yellow%%s');
+        self::$ticketReopen = self::parseColors('%gold%%s has reopened ticket #%u');
+        self::$ticketReopenSelf = self::parseColors('%gold%Ticket #%u has been reopened.');
     }
 
     /**
