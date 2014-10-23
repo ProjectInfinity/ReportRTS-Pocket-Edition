@@ -33,6 +33,12 @@ class HoldTicket {
 
         $ticketId = intval($args[1]);
 
+        # Check if ticket is open or not. You can't put a held or closed ticket on hold.
+        if(!isset(ReportRTS::$tickets[$ticketId])) {
+            $sender->sendMessage(MessageHandler::$ticketNotOpen);
+            return true;
+        }
+
         # Check if ticket is claimed and if the user that sent the command is the same user as the one that opened the ticket.
         $isClaimed = ReportRTS::$tickets[$ticketId]->getStatus() == 1 ? strtoupper(ReportRTS::$tickets[$ticketId]->getStaffName()) != strtoupper($sender->getName()) : false;
 
@@ -59,12 +65,6 @@ class HoldTicket {
                 return true;
             }
             $sender->sendMessage(sprintf(MessageHandler::$generalError, "Unable to put ticket #".$ticketId." on hold."));
-            return true;
-        }
-
-        # Check if ticket is open or not. You can't put a held or closed ticket on hold.
-        if(!isset(ReportRTS::$tickets[$ticketId])) {
-            $sender->sendMessage(MessageHandler::$ticketNotOpen);
             return true;
         }
 
