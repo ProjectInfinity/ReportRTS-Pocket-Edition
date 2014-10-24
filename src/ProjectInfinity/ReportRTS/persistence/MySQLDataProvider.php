@@ -225,7 +225,7 @@ class MySQLDataProvider implements DataProvider {
         if(!isset(ReportRTS::$tickets[$id])) {
             # Ticket is not of status OPEN(1).
             $ticket = $this->getTicket($id);
-            if($ticket == null) return -2;
+            if($ticket == null) return -3;
         } else {
             # Retrieve ticket from ticket array.
             $ticket = ReportRTS::$tickets[$id];

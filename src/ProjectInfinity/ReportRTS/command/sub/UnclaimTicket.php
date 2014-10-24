@@ -69,6 +69,11 @@ class UnclaimTicket {
                 $sender->sendMessage(MessageHandler::$ticketStatusError);
                 return true;
             }
+            if($resultCode == -3) {
+                # Ticket does not exist.
+                $sender->sendMessage(sprintf(MessageHandler::$ticketNotExists, $ticketId));
+                return true;
+            }
             $sender->sendMessage(sprintf(MessageHandler::$generalError, "Unable to unclaim ticket #".$ticketId));
             return true;
         }

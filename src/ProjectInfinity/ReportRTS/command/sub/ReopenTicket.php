@@ -32,7 +32,7 @@ class ReopenTicket {
 
         $ticketId = intval($args[1]);
 
-        if($resultCode = $this->data->setTicketStatus($ticketId, $sender->getName(), 2, "", 0, round(microtime(true))) and $resultCode != 1) {
+        if($resultCode = $this->data->setTicketStatus($ticketId, $sender->getName(), 0, "", 0, round(microtime(true))) and $resultCode != 1) {
             if($resultCode == -1) {
                 # Username is invalid or does not exist.
                 $sender->sendMessage(sprintf(MessageHandler::$userNotExists, $sender->getName()));
@@ -43,20 +43,25 @@ class ReopenTicket {
                 $sender->sendMessage(MessageHandler::$ticketStatusError);
                 return true;
             }
+            if($resultCode == -3) {
+                # Ticket does not exist.
+                $sender->sendMessage(sprintf(MessageHandler::$ticketNotExists, $ticketId));
+                return true;
+            }
             $sender->sendMessage(sprintf(MessageHandler::$generalError, "Unable to reopen ticket #".$ticketId));
             return true;
         }
 
         ReportRTS::$tickets[$ticketId] = $this->data->getTicket($ticketId);
 
-        # Check if ticket is open or not. You can't put a held or closed ticket on hold.
+        # Check if ticket has been assigned to the array.
         if(!isset(ReportRTS::$tickets[$ticketId])) {
             $sender->sendMessage(sprintf(MessageHandler::$generalError, "Something went wrong! Ticket did not enter the ticket array."));
             return true;
         }
 
         $this->plugin->messageStaff(sprintf(MessageHandler::$ticketReopen, $sender->getName(), $ticketId));
-        $this->plugin->messageStaff(sprintf(MessageHandler::$ticketReopen, $ticketId));
+        $sender->sendMessage(sprintf(MessageHandler::$ticketReopenSelf, $ticketId));
 
         return true;
     }
