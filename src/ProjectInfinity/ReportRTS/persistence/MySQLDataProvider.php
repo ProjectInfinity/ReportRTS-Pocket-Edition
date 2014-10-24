@@ -269,9 +269,10 @@ class MySQLDataProvider implements DataProvider {
         return $result;
     }
 
-    public function setUserStatus($username, $status)
-    {
-        // TODO: Implement setUserStatus() method.
+    public function setUserStatus($username, $status) {
+
+
+        # TODO: Return affected rows.
     }
 
     public function populateTicketArray()

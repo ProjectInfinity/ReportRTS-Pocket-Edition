@@ -48,6 +48,7 @@ class MessageHandler {
     public static $ticketReopenSelf;
 
     public static $userNotExists;
+    public static $userBanned;
 
     public static $staffList;
 
@@ -86,6 +87,7 @@ class MessageHandler {
         self::$ticketHoldText = self::parseColors('%gold%Your ticket was put on hold by %s');
         self::$ticketHoldText = self::parseColors('%gold%Ticket text: %yellow%%s %gold%Reason: %yellow%%s');
         self::$userNotExists = self::parseColors('%red%The specified user %s does not exist or contains invalid characters.');
+        self::$userBanned = self::parseColors('%gold%%s has forbid %s from opening new tickets.');
         self::$ticketStatusError = self::parseColors('%red%Unable to set ticket status. Check that the status of the ticket does not collide.');
         self::$ticketTeleport = self::parseColors('%blue%Teleported to ticket #%u.');
         self::$separator = self::parseColors('%yellow%, ');
