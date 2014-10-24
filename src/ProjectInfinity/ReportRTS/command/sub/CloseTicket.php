@@ -43,6 +43,12 @@ class CloseTicket {
             $ticket = $this->data->getTicket($ticketId);
         }
 
+        # Ticket does not exist.
+        if($ticket === null) {
+            $sender->sendMessage(sprintf(MessageHandler::$ticketNotExists, $ticketId));
+            return true;
+        }
+
         # Check if ticket is claimed and if the user that sent the command is the same user as the one that opened the ticket.
         $isClaimed = $ticket->getStatus() == 1 ? strtoupper($ticket->getStaffName()) != strtoupper($sender->getName()) : false;
 
