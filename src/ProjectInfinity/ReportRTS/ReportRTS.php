@@ -59,6 +59,12 @@ class ReportRTS extends PluginBase {
     public function onDisable() {
         # Close data provider connection.
         $this->provider->close();
+
+        # Cleanup, in case of a reload.
+        unset($this->staff);
+        unset($this->notifications);
+        unset($this->commands);
+        unset(ReportRTS::$tickets);
     }
 
     public function reloadSettings() {
