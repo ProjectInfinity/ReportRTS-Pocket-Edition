@@ -57,9 +57,9 @@ class ReportRTSCommand implements CommandExecutor {
 
                 # Check if target was gotten through getPlayer or using getUser.
                 if($target instanceof Player) {
-                    $result = $this->data->setUserStatus($target->getName(), 1);
+                    $result = $this->data->setUserStatus($target->getName(), true);
                 } else {
-                    $result = $this->data->setUserStatus($target['username'], 1);
+                    $result = $this->data->setUserStatus($target['username'], true);
                 }
 
                 # Check if user status was set.
@@ -73,6 +73,40 @@ class ReportRTSCommand implements CommandExecutor {
                 break;
 
             case "UNBAN":
+                if(!$sender->hasPermission(PermissionHandler::canBan)) {
+                    $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canBan));
+                    return true;
+                }
+                if(count($args) < 2) {
+                    $sender->sendMessage(sprintf(MessageHandler::$generalError, "Please specify a player."));
+                    return true;
+                }
+
+                # Attempt to get the target that you wish to unban.
+                $target = $this->plugin->getServer()->getPlayer($args[1]);
+                if($target === null) {
+                    # User is not online, let's see if they exist in the database.
+                    $target = $this->data->getUser($args[1]);
+                    if($target['id'] == 0) {
+                        $sender->sendMessage(sprintf(MessageHandler::$userNotExists, $args[1]));
+                        return true;
+                    }
+                }
+
+                # Check if target was gotten through getPlayer or using getUser.
+                if($target instanceof Player) {
+                    $result = $this->data->setUserStatus($target->getName(), false);
+                } else {
+                    $result = $this->data->setUserStatus($target['username'], false);
+                }
+
+                # Check if user status was set.
+                if($result < 1) {
+                    $sender->sendMessage(sprintf(MessageHandler::$generalError, "No affected users. This shouldn't happen."));
+                    return true;
+                }
+
+                $this->plugin->messageStaff(sprintf(MessageHandler::$userUnbanned, $args[1]));
 
                 break;
 

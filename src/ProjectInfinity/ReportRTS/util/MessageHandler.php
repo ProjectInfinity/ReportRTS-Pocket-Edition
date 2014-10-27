@@ -49,6 +49,7 @@ class MessageHandler {
 
     public static $userNotExists;
     public static $userBanned;
+    public static $userUnbanned;
 
     public static $staffList;
 
@@ -88,6 +89,7 @@ class MessageHandler {
         self::$ticketHoldText = self::parseColors('%gold%Ticket text: %yellow%%s %gold%Reason: %yellow%%s');
         self::$userNotExists = self::parseColors('%red%The specified user %s does not exist or contains invalid characters.');
         self::$userBanned = self::parseColors('%gold%%s has forbid %s from opening new tickets.');
+        self::$userUnbanned = self::parseColors('%gold%%s has been pardoned and may open new tickets again.');
         self::$ticketStatusError = self::parseColors('%red%Unable to set ticket status. Check that the status of the ticket does not collide.');
         self::$ticketTeleport = self::parseColors('%blue%Teleported to ticket #%u.');
         self::$separator = self::parseColors('%yellow%, ');
