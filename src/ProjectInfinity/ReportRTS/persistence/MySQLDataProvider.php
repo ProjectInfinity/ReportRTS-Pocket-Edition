@@ -333,4 +333,8 @@ class MySQLDataProvider implements DataProvider {
         $sql->close();
         return $array;
     }
+
+    public function reset() {
+        $this->database->multi_query("TRUNCATE TABLE `reportrts_users`; TRUNCATE TABLE `reportrts_tickets`;");
+    }
 }

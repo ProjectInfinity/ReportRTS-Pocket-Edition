@@ -13,6 +13,8 @@ interface DataProvider {
 
     public function close();
 
+    public function reset();
+
     public function createUser($username);
 
     /**

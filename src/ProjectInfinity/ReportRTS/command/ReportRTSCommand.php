@@ -6,6 +6,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
+use pocketmine\utils\TextFormat;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
 use ProjectInfinity\ReportRTS\util\PermissionHandler;
@@ -111,6 +112,17 @@ class ReportRTSCommand implements CommandExecutor {
                 break;
 
             case "RESET":
+                if(!$sender->isOp()) {
+                    $sender->sendMessage(sprintf(MessageHandler::$generalError, "You need to be OP to do that."));
+                    return true;
+                }
+
+                $this->data->reset();
+                $this->plugin->reloadSettings();
+
+                $sender->sendMessage(TextFormat::RED."[ReportRTS] You deleted all tickets and users.");
+                $this->plugin->getLogger()->alert($sender->getName()." deleted all tickets and users from ReportRTS.");
+
 
                 break;
 
@@ -135,5 +147,6 @@ class ReportRTSCommand implements CommandExecutor {
                 $sender->sendMessage(MessageHandler::$generalError);
                 return false;
         }
+        return true;
     }
 }
