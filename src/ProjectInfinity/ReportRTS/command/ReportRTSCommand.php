@@ -57,12 +57,16 @@ class ReportRTSCommand implements CommandExecutor {
 
                 # Check if target was gotten through getPlayer or using getUser.
                 if($target instanceof Player) {
-                    $this->data->setUserStatus($target->getName(), 1);
+                    $result = $this->data->setUserStatus($target->getName(), 1);
                 } else {
-                    $this->data->setUserStatus($target['username'], 1);
+                    $result = $this->data->setUserStatus($target['username'], 1);
                 }
 
-                # TODO: Check output by setUserStatus.
+                # Check if user status was set.
+                if($result < 1) {
+                    $sender->sendMessage(sprintf(MessageHandler::$generalError, "No affected users. This shouldn't happen."));
+                    return true;
+                }
 
                 $this->plugin->messageStaff(sprintf(MessageHandler::$userBanned, $args[1]));
 

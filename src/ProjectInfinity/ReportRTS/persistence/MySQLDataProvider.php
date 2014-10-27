@@ -271,8 +271,18 @@ class MySQLDataProvider implements DataProvider {
 
     public function setUserStatus($username, $status) {
 
+        # User status has to be a boolean.
+        if(!is_bool($status)) return 0;
 
-        # TODO: Return affected rows.
+        $status = $status ? 1 : 0;
+
+        $stmt = $this->database->prepare("UPDATE `reportrts_users` SET  `banned` = ? WHERE `name` = ? LIMIT 1");
+        $stmt->bind_param("is", $status, $username);
+        $stmt->execute();
+        $result = $stmt->affected_rows;
+        $stmt->close();
+
+        return $result;
     }
 
     public function populateTicketArray()
