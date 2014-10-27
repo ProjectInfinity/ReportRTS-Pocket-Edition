@@ -64,7 +64,7 @@ class ReportRTS extends PluginBase {
         unset($this->staff);
         unset($this->notifications);
         unset($this->commands);
-        unset(ReportRTS::$tickets);
+        ReportRTS::$tickets = null;
     }
 
     public function reloadSettings() {
