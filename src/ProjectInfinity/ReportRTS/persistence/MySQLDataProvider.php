@@ -215,9 +215,19 @@ class MySQLDataProvider implements DataProvider {
         // TODO: Implement getOpenedBy() method.
     }
 
-    public function getStats()
-    {
-        // TODO: Implement getStats() method.
+    public function getTop($limit) {
+
+        if(!is_int($limit)) return [];
+
+        $query = $this->database->query("SELECT `reportrts_users`.name, COUNT(`reportrts_tickets`.staffId) AS tickets FROM `reportrts_tickets`
+        LEFT JOIN `reportrts_users` ON `reportrts_tickets`.staffId = `reportrts_users`.id WHERE `reportrts_tickets`.status = 3
+        GROUP BY `name` ORDER BY tickets DESC LIMIT ".$limit);
+
+        $result = [];
+
+        while($row = $query->fetch_assoc()) array_push($result, $row);
+
+        return $result;
     }
 
     public function setTicketStatus($id, $username, $status, $comment, $notified, $timestamp) {

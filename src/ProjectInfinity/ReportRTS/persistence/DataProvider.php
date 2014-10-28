@@ -56,7 +56,12 @@ interface DataProvider {
     public function getEverything($table);
     public function getHandledBy($username);
     public function getOpenedBy($username);
-    public function getStats();
+
+    /**
+     * @param int $limit
+     * @return Array
+     */
+    public function getTop($limit);
 
     /**
      * @param $username

@@ -118,15 +118,32 @@ class ReportRTSCommand implements CommandExecutor {
                 }
 
                 $this->data->reset();
-                $this->plugin->reloadSettings();
 
                 $sender->sendMessage(TextFormat::RED."[ReportRTS] You deleted all tickets and users.");
                 $this->plugin->getLogger()->alert($sender->getName()." deleted all tickets and users from ReportRTS.");
 
-
                 break;
 
             case "STATS":
+                if(!$sender->hasPermission(PermissionHandler::canSeeStats)) {
+                    $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canSeeStats));
+                    return true;
+                }
+
+                $data = $this->data->getTop(10);
+                # Check if data is empty. This may happen when the passed $limit variable is not an integer.
+                if(count($data) == 0) {
+                    $sender->sendMessage(sprintf(MessageHandler::$generalError, "getTop() returned an empty array."));
+                    return true;
+                }
+
+                $sender->sendMessage(TextFormat::YELLOW."---- Top 10 ----");
+                $sender->sendMessage(TextFormat::YELLOW."<Placing>. <Player> : <Resolved Tickets>");
+                $i = 0;
+                foreach($data as $array => $value) {
+                    $i++;
+                    $sender->sendMessage(TextFormat::YELLOW.$i.". ". $value['name']." : ".$value['tickets']);
+                }
 
                 break;
 
