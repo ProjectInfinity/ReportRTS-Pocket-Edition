@@ -157,6 +157,49 @@ class ReportRTSCommand implements CommandExecutor {
                 break;
 
             case "DUTY":
+                if(!($sender instanceof Player)) {
+                    $sender->sendMessage(TextFormat::RED."Only players can change duty status.");
+                    return true;
+                }
+                if(!$sender->hasPermission(PermissionHandler::isStaff)) {
+                    $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::isStaff));
+                    return true;
+                }
+
+                # Show current duty status if there are less than 2 arguments.
+                if(count($args) < 2) {
+                    if(($staff = array_search($sender->getName(), $this->plugin->staff)) !== false)
+                        $sender->sendMessage(TextFormat::GREEN."You are currently on duty.");
+                    else
+                        $sender->sendMessage(TextFormat::RED."You are currently off duty.");
+                    return true;
+                }
+
+                $duty = strtoupper($args[1]);
+                if(!$duty === "ON" and !$duty === "OFF") {
+                    $sender->sendMessage(TextFormat::RED."Syntax is /rts duty on|off");
+                }
+
+                # TODO: Change duty status here.
+                if($duty === "ON") {
+                    if(($staff = array_search($sender->getName(), $this->plugin->staff)) === false) {
+                        array_push($this->plugin->staff, $sender->getName());
+                        $sender->sendMessage(TextFormat::GREEN."You are now on duty.");
+                        return true;
+                    }
+                    $sender->sendMessage(TextFormat::YELLOW."You are already on duty.");
+                }
+                if($duty === "OFF") {
+                    if(($staff = array_search($sender->getName(), $this->plugin->staff)) !== false) {
+                        unset($this->plugin->staff[$staff]);
+                        $sender->sendMessage(TextFormat::GREEN."You are no longer on duty.");
+                        return true;
+                    }
+                    $sender->sendMessage(TextFormat::YELLOW."You are already off duty.");
+                }
+                break;
+
+            case "NOTIFICATIONS":
 
                 break;
 
