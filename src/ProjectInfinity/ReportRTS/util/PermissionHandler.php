@@ -20,6 +20,7 @@ class PermissionHandler {
     const canSeeStats = "reportrts.command.stats";
     const canTeleport = "reportrts.command.teleport";
     const canBroadcast = "reportrts.command.broadcast";
+    const canManageNotifications = "reportrts.command.notification";
 
     const bypassTicketLimit = "reportrts.bypass.ticket";
     const bypassTicketClaim = "reportrts.bypass.claim";

@@ -347,4 +347,9 @@ class MySQLDataProvider implements DataProvider {
     public function reset() {
         $this->database->multi_query("TRUNCATE TABLE `reportrts_users`; TRUNCATE TABLE `reportrts_tickets`;");
     }
+
+    public function resetNotifications() {
+        $query = $this->database->query("UPDATE `reportrts_tickets` SET `notified` = 1 WHERE `notified` = 0");
+        return $query->num_rows;
+    }
 }

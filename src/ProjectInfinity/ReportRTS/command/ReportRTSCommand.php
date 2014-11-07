@@ -180,7 +180,6 @@ class ReportRTSCommand implements CommandExecutor {
                     $sender->sendMessage(TextFormat::RED."Syntax is /rts duty on|off");
                 }
 
-                # TODO: Change duty status here.
                 if($duty === "ON") {
                     if(($staff = array_search($sender->getName(), $this->plugin->staff)) === false) {
                         array_push($this->plugin->staff, $sender->getName());
@@ -199,8 +198,32 @@ class ReportRTSCommand implements CommandExecutor {
                 }
                 break;
 
+            case "NOTIF":
             case "NOTIFICATIONS":
+                if(!$sender->hasPermission(PermissionHandler::canManageNotifications)) {
+                    $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canManageNotifications));
+                    return true;
+                }
+                # Display a message with pending notifications if no arguments are given.
+                if(count($args) <= 1) {
+                    $sender->sendMessage(TextFormat::YELLOW."There are currently ".count($this->plugin->notifications)." pending notifications.");
+                    $sender->sendMessage(TextFormat::YELLOW."Reset them using /rts notif reset");
+                    return true;
+                }
+                # Incorrect syntax. Inform the user.
+                if(strtoupper($args[1]) !== "RESET") {
+                    $sender->sendMessage(TextFormat::RED."Syntax incorrect! The correct syntax is /rts notif reset");
+                    return true;
+                }
 
+                if($this->data->resetNotifications() < 1) {
+                    $sender->sendMessage(sprintf(MessageHandler::$generalError, "Failed to reset notifications!"));
+                    return true;
+                }
+
+                # Clean up after ourselves.
+                unset($this->plugin->notifications);
+                $this->plugin->notifications = [];
                 break;
 
             default:
