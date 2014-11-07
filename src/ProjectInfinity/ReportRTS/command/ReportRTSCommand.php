@@ -216,10 +216,12 @@ class ReportRTSCommand implements CommandExecutor {
                     return true;
                 }
 
-                if($this->data->resetNotifications() < 1) {
+                if(!$this->data->resetNotifications()) {
                     $sender->sendMessage(sprintf(MessageHandler::$generalError, "Failed to reset notifications!"));
                     return true;
                 }
+
+                $sender->sendMessage(TextFormat::GREEN."You have marked all notifications as read.");
 
                 # Clean up after ourselves.
                 unset($this->plugin->notifications);

@@ -350,6 +350,6 @@ class MySQLDataProvider implements DataProvider {
 
     public function resetNotifications() {
         $query = $this->database->query("UPDATE `reportrts_tickets` SET `notified` = 1 WHERE `notified` = 0");
-        return $query->num_rows;
+        return $query;
     }
 }
