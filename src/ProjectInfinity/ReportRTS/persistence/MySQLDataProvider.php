@@ -54,7 +54,7 @@ class MySQLDataProvider implements DataProvider {
 
     /** @return Ticket[] */
     private function load() {
-        $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status < '2' ORDER BY ticket.id ASC");
+        $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.uid WHERE ticket.status < '2' ORDER BY ticket.id ASC");
         $temp = [];
         while($row = $result->fetch_assoc()) {
             $ticket = new Ticket($row['id'], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
