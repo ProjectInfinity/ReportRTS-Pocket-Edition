@@ -56,11 +56,11 @@ class MySQLDataProvider implements DataProvider {
     private function load() {
         $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status < '2' ORDER BY ticket.id ASC");
         $temp = [];
-        while($row = $result->fetch_array()) {
-            $ticket = new Ticket($row[0], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
+        while($row = $result->fetch_assoc()) {
+            $ticket = new Ticket($row['id'], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
                 $row['pitch'], $row['timestamp'], $row['staffTime'], $row['text'], $row['name'], $row['world'], null, $row['comment']);
             if($ticket->getStatus() > 0) $ticket->setStaffName($this->getUser(null, $ticket->getStaffId())['username']);
-            $temp[$row[0]] = $ticket;
+            $temp[$row['id']] = $ticket;
         }
 
         $result->close();
@@ -159,22 +159,22 @@ class MySQLDataProvider implements DataProvider {
 
             # Ticket is unresolved.
             case 0:
-                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status = '0' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.uid WHERE ticket.status = '0' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
                 break;
 
             # Ticket is claimed.
             case 1:
-                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status = '1' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.uid WHERE ticket.status = '1' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
                 break;
 
             # Ticket is on hold.
             case 2:
-                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status = '2' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.uid WHERE ticket.status = '2' ORDER BY ticket.id ASC LIMIT ".$cursor.",".$limit);
                 break;
 
             # Ticket is closed.
             case 3:
-                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.status = '3' ORDER BY ticket.id DESC LIMIT ".$cursor.",".$limit);
+                $result = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.uid WHERE ticket.status = '3' ORDER BY ticket.id DESC LIMIT ".$cursor.",".$limit);
                 break;
         }
         return $result;
@@ -183,8 +183,8 @@ class MySQLDataProvider implements DataProvider {
     /** @return Ticket */
     public function getTicket($id) {
         if(!ToolBox::isNumber($id)) return null;
-        $row = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.id = '$id' LIMIT 1")->fetch_array();
-        $ticket = new Ticket($row[0], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
+        $row = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.id = '$id' LIMIT 1")->fetch_assoc();
+        $ticket = new Ticket($row['id'], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
             $row['pitch'], $row['timestamp'], $row['staffTime'], $row['text'], $row['name'], $row['world'], null, $row['comment']);
         if($ticket->getId() == null) return null;
         return $ticket;
@@ -220,7 +220,7 @@ class MySQLDataProvider implements DataProvider {
         if(!is_int($limit)) return [];
 
         $query = $this->database->query("SELECT `reportrts_users`.name, COUNT(`reportrts_tickets`.staffId) AS tickets FROM `reportrts_tickets`
-        LEFT JOIN `reportrts_users` ON `reportrts_tickets`.staffId = `reportrts_users`.id WHERE `reportrts_tickets`.status = 3
+        LEFT JOIN `reportrts_users` ON `reportrts_tickets`.staffId = `reportrts_users`.uid WHERE `reportrts_tickets`.status = 3
         GROUP BY `name` ORDER BY tickets DESC LIMIT ".$limit);
 
         $result = [];
@@ -326,7 +326,7 @@ class MySQLDataProvider implements DataProvider {
             $sql->bind_param("s", $username);
         }
         if($username == null and $id > 0) {
-            $sql = $this->database->prepare("SELECT * FROM `reportrts_users` WHERE `id` = ?");
+            $sql = $this->database->prepare("SELECT * FROM `reportrts_users` WHERE `uid` = ?");
             $sql->bind_param("i", $id);
         }
 

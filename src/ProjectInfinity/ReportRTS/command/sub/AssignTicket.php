@@ -3,7 +3,6 @@
 namespace ProjectInfinity\ReportRTS\command\sub;
 
 use pocketmine\command\CommandSender;
-use pocketmine\IPlayer;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
 use ProjectInfinity\ReportRTS\util\PermissionHandler;
