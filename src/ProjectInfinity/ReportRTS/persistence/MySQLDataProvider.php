@@ -183,7 +183,7 @@ class MySQLDataProvider implements DataProvider {
     /** @return Ticket */
     public function getTicket($id) {
         if(!ToolBox::isNumber($id)) return null;
-        $row = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.id WHERE ticket.id = '$id' LIMIT 1")->fetch_assoc();
+        $row = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.uid WHERE ticket.id = '$id' LIMIT 1")->fetch_assoc();
         $ticket = new Ticket($row['id'], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
             $row['pitch'], $row['timestamp'], $row['staffTime'], $row['text'], $row['name'], $row['world'], null, $row['comment']);
         if($ticket->getId() == null) return null;
@@ -205,14 +205,64 @@ class MySQLDataProvider implements DataProvider {
         // TODO: Implement getEverything() method.
     }
 
-    public function getHandledBy($username)
-    {
-        // TODO: Implement getHandledBy() method.
+    public function getHandledBy($username, $cursor, $limit) {
+        return $this->getTicketsBy($username, $cursor, $limit, false);
     }
 
-    public function getOpenedBy($username)
-    {
-        // TODO: Implement getOpenedBy() method.
+    public function getOpenedBy($username, $cursor, $limit) {
+        return $this->getTicketsBy($username, $cursor, $limit, true);
+    }
+
+    private function getTicketsBy($username, $cursor, $limit, $creator) {
+
+        $user = $this->getUser($username);
+        if($user['id'] === 0) {
+            return false;
+        }
+        $result = null;
+
+        # TODO: Make this more DRY.
+        if($creator) {
+
+            $stmt = $this->database->prepare("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON `ticket`.userId = `user`.uid
+            WHERE `ticket`.userId = ? ORDER BY `ticket`.timestamp DESC LIMIT ?, ?");
+            $stmt->bind_param("iii", $user['id'], $cursor, $limit);
+            $stmt->execute();
+            $temp = $stmt->get_result();
+            $result = [];
+            if (!$temp) {
+                echo "Database Error [{$this->database->errno}] {$this->database->error}".PHP_EOL;
+                return null;
+            }
+            while($row = $temp->fetch_array(1)) {
+                $ticket = new Ticket($row['id'], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
+                    $row['pitch'], $row['timestamp'], $row['staffTime'], $row['text'], $row['name'], $row['world'], null, $row['comment']);
+                if($ticket->getStatus() > 0) $ticket->setStaffName($this->getUser(null, $ticket->getStaffId())['username']);
+                $result[$row['id']] = $ticket;
+            }
+
+            $stmt->close();
+            return $result;
+        } else {
+
+            $stmt = $this->database->prepare("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON `ticket`.userId = `user`.uid
+            WHERE `ticket`.staffId = ? ORDER BY `ticket`.staffTime DESC LIMIT ?, ?");
+            $stmt->bind_param("iii", $user['id'], $cursor, $limit);
+            $stmt->execute();
+            $temp = $stmt->get_result();
+            $result = [];
+            if (!$temp) {
+                echo "Database Error [{$this->database->errno}] {$this->database->error}".PHP_EOL;
+                return null;
+            }
+            while($row = $temp->fetch_array(1)) {
+                $ticket = new Ticket($row['id'], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
+                    $row['pitch'], $row['timestamp'], $row['staffTime'], $row['text'], $row['name'], $row['world'], null, $row['comment']);
+                if($ticket->getStatus() > 0) $ticket->setStaffName($this->getUser(null, $ticket->getStaffId())['username']);
+                $result[$row['id']] = $ticket;
+            }
+        }
+        return $result;
     }
 
     public function getTop($limit) {

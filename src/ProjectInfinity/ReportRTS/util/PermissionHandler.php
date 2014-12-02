@@ -18,6 +18,7 @@ class PermissionHandler {
     const canHoldTicket = "reportrts.command.hold";
     const canSeeStaff = "reportrts.command.list";
     const canSeeStats = "reportrts.command.stats";
+    const canSearch = "reportrts.command.search";
     const canTeleport = "reportrts.command.teleport";
     const canBroadcast = "reportrts.command.broadcast";
     const canManageNotifications = "reportrts.command.notification";

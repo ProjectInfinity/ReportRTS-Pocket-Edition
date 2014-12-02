@@ -55,8 +55,21 @@ interface DataProvider {
     public function getLocation($id);
     public function getUnnotifiedUsers();
     public function getEverything($table);
-    public function getHandledBy($username);
-    public function getOpenedBy($username);
+
+    /**
+     * @param $username
+     * @param $cursor
+     * @param $limit
+     * @return Ticket[]|mixed
+     */
+    public function getHandledBy($username, $cursor, $limit);
+    /**
+     * @param $username
+     * @param $cursor
+     * @param $limit
+     * @return Ticket[]|mixed
+     */
+    public function getOpenedBy($username, $cursor, $limit);
 
     /**
      * @param int $limit

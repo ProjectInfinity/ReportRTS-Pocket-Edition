@@ -10,6 +10,7 @@ use pocketmine\utils\TextFormat;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
 use ProjectInfinity\ReportRTS\util\PermissionHandler;
+use ProjectInfinity\ReportRTS\util\ToolBox;
 
 class ReportRTSCommand implements CommandExecutor {
 
@@ -149,7 +150,60 @@ class ReportRTSCommand implements CommandExecutor {
 
             case "FIND":
             case "SEARCH":
+                if(!$sender->hasPermission(PermissionHandler::canSearch)) {
+                    $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canSearch));
+                    return true;
+                }
+                if(count($args) < 3) {
+                    $sender->sendMessage(sprintf(MessageHandler::$generalError, "Syntax is /rts search <Player> <Closed/Opened> <Page>"));
+                    return true;
+                }
 
+                $action = $args[2];
+                $player = $args[1];
+                # If page is specified, we should use that as opposed to the default.
+                if(count($args) === 4)
+                    $page = $args[3];
+                else
+                    $page = 1;
+
+                if($page < 1) $page = 1;
+
+                # Set cursor start position.
+                $i = ($page * $this->plugin->ticketPerPage) - $this->plugin->ticketPerPage;
+
+                $tickets = null;
+
+                if(strtoupper($action) === "CLOSED") {
+                    $tickets = $this->data->getHandledBy($player, $i, $this->plugin->ticketPerPage);
+                }
+                if(strtoupper($action) === "OPENED") {
+                    $tickets = $this->data->getOpenedBy($player, $i, $this->plugin->ticketPerPage);
+                }
+
+                # The player specified does not exist!
+                if($tickets === false) {
+                    $sender->sendMessage(sprintf(MessageHandler::$userNotExists, $player));
+                    return true;
+                }
+
+                # No tickets were returned somehow or the user specified an invalid action.
+                if($tickets === null) {
+                    $sender->sendMessage(sprintf(MessageHandler::$generalError, "Tickets are null! /rts search <Player> <Closed/Opened> <Page>"));
+                    return true;
+                }
+
+                # Send a message explaining which page we're on.
+                $sender->sendMessage(TextFormat::AQUA."--------- Page ".$page." -".TextFormat::YELLOW." ".strtoupper($action)." ".TextFormat::AQUA."---------");
+
+                foreach($tickets as $ticket) {
+                    $substring = ToolBox::shortenMessage($ticket->getMessage());
+                    # If the ticket is claimed, we should specify so by altering the text and colour of it.
+                    $substring = ($ticket->getStatus() == 1) ? TextFormat::LIGHT_PURPLE."Claimed by ".$ticket->getStaffName() : TextFormat::GRAY.$substring;
+                    # Send final message.
+                    $sender->sendMessage(TextFormat::GOLD."#".$ticket->getId()." ".ToolBox::timeSince($ticket->getTimestamp())." by ".
+                        (ToolBox::isOnline($ticket->getName()) ? TextFormat::GREEN : TextFormat::RED).$ticket->getName().TextFormat::GOLD." - ".$substring);
+                }
                 break;
 
             case "HELP":
