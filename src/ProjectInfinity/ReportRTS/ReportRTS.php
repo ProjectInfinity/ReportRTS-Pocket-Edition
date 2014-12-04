@@ -23,6 +23,8 @@ class ReportRTS extends PluginBase {
     public $ticketNagHeld;
     public $ticketHideOffline;
 
+    public $isSetup;
+
     # Array containing all tickets.
     /** @var Ticket[]  */
     public static $tickets = [];
@@ -43,7 +45,13 @@ class ReportRTS extends PluginBase {
     public function onEnable() {
         $this->getLogger()->info("Welcome to the Alpha for ReportRTS. Please report any bugs you may discover to https://github.com/ProjectInfinity/ReportRTS-Pocket-Edition/issues.
         This project is a large Bukkit project that is being ported to PocketMine, be patient.");
-        $this->reloadSettings();
+
+        if($this->isDefault()) {
+            # TODO: Insert what happens if the server is running a default configuration that will not work.
+        } else {
+            # Server is not running on default settings that prevent the plugin from operating, therefore load settings.
+            $this->reloadSettings();
+        }
 
         # Set up MessageHandler.
         MessageHandler::load();
@@ -155,5 +163,16 @@ class ReportRTS extends PluginBase {
     /** @return DataProvider */
     public function getDataProvider() {
         return $this->provider;
+    }
+
+    private function isDefault() {
+        return (
+            strtoupper($this->getConfig()->get("storage")["type"]) === "MYSQL" &&
+            strtoupper($this->getConfig()->get("storage")["host"]) === "127.0.0.1" &&
+            $this->getConfig()->get("storage")["port"] === 3306 &&
+            strtoupper($this->getConfig()->get("storage")["username"]) === "USERNAME" &&
+            strtoupper($this->getConfig()->get("storage")["password"]) === "PASSWORD" &&
+            strtoupper($this->getConfig()->get("storage")["database"]) === "MINECRAFT"
+        );
     }
 }
