@@ -108,7 +108,9 @@ class ReportRTS extends PluginBase {
                 break;
 
             default:
-                # TODO: Handle if no matched storage type is found.
+                # Dummy provider not provided. So let's disable the plugin.
+                $this->getLogger()->warning("Unrecognized storage type, disabling plugin to avoid errors.");
+                $this->getPluginLoader()->disablePlugin($this);
                 break;
         }
 
