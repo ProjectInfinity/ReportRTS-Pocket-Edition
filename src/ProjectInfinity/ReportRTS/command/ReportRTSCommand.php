@@ -16,6 +16,12 @@ class ReportRTSCommand implements CommandExecutor {
 
     private $plugin;
     private $data;
+    private $dpType;
+    private $dpHost;
+    private $dpPort;
+    private $dpUser;
+    private $dpPass;
+    private $dpDb;
 
     public function __construct(ReportRTS $plugin) {
         $this->plugin = $plugin;
@@ -280,6 +286,155 @@ class ReportRTSCommand implements CommandExecutor {
                 # Clean up after ourselves.
                 unset($this->plugin->notifications);
                 $this->plugin->notifications = [];
+                break;
+
+            case "SETUP":
+                if(!$sender->isOp()) {
+                    $sender->sendMessage(sprintf(MessageHandler::$generalError, "You have to be OP to use this command."));
+                    return true;
+                }
+                if(count($args) <= 1) {
+                    $sender->sendMessage(TextFormat::GREEN."Welcome to the ReportRTS setup! Below you will see valid actions for this command. /rts <action> <value>");
+                    $sender->sendMessage("Actions: TYPE, HOST, PORT, DATABASE, USERNAME, PASSWORD");
+                    $sender->sendMessage("When you are done, type /rts setup save. Type /rts setup to view this message again.");
+                    return true;
+                }
+
+                switch(strtoupper($args[1])) {
+
+                    case "TYPE":
+                        if(count($args) < 3 or $args[2] === null or $args[2] == "") {
+                            $sender->sendMessage(TextFormat::RED."Type cannot be empty or null! Supported types are: MYSQL");
+                            return true;
+                        }
+                        if(strtoupper($args[2]) !== "MYSQL") {
+                            $sender->sendMessage(TextFormat::RED."No valid type was specified. Valid types are: MYSQL");
+                            return true;
+                        }
+                        $this->dpType = "MYSQL";
+                        $this->plugin->getConfig()->setNested("storage.type", "mysql");
+                        $this->plugin->saveConfig();
+                        $this->plugin->reloadConfig();
+
+                        $sender->sendMessage(TextFormat::GREEN."Type has been set to ".$this->dpType.". Continue with /rts setup HOST <value>");
+                        break;
+
+                    case "HOST":
+                        if(count($args) < 3 or $args[2] === null or $args[2] == "" or $this->dpType !== "MYSQL") {
+                            $sender->sendMessage(TextFormat::RED."Host cannot be empty, null or specified on unsupported types. Default is likely localhost or 127.0.0.1");
+                            return true;
+                        }
+
+                        $this->dpHost = $args[2];
+                        $this->plugin->getConfig()->setNested("storage.host", $this->dpHost);
+                        $this->plugin->saveConfig();
+                        $this->plugin->reloadConfig();
+
+                        $sender->sendMessage(TextFormat::GREEN."Host has been set to ".$this->dpHost.". Continue with /rts setup PORT <value>");
+                        break;
+
+                    case "PORT":
+                        if(count($args) < 3 or !is_int((int)$args[2]) or $this->dpType !== "MYSQL") {
+                            $sender->sendMessage(TextFormat::RED."Port cannot be null, not a number or specified on unsupported types. Default is likely 3306 for MySQL");
+                            return true;
+                        }
+
+                        $this->dpPort = intval($args[2]);
+                        $this->plugin->getConfig()->setNested("storage.port", $this->dpPort);
+                        $this->plugin->saveConfig();
+                        $this->plugin->reloadConfig();
+
+                        $sender->sendMessage(TextFormat::GREEN."Port has been set to ".$this->dpPort.". Continue with /rts setup USERNAME <value>");
+                        break;
+
+                    case "USERNAME":
+                        if(count($args) < 3 or $args[2] === null or $args[2] == "" or $this->dpType !== "MYSQL") {
+                            $sender->sendMessage(TextFormat::RED."Username cannot be empty, null or specified on unsupported types.");
+                            return true;
+                        }
+
+                        $this->dpUser = $args[2];
+                        $this->plugin->getConfig()->setNested("storage.username", $this->dpUser);
+                        $this->plugin->saveConfig();
+                        $this->plugin->reloadConfig();
+
+                        $sender->sendMessage(TextFormat::GREEN."Username has been set to ".$this->dpUser.". Continue with /rts setup PASSWORD <value>");
+                        break;
+
+                    case "PASSWORD":
+                        if(count($args) < 3 or $args[2] === null or $args[2] == "" or $this->dpType !== "MYSQL") {
+                            $sender->sendMessage(TextFormat::RED."Password cannot be empty, null or specified on unsupported types.");
+                            return true;
+                        }
+
+                        $this->dpPass = $args[2];
+                        $this->plugin->getConfig()->setNested("storage.password", $this->dpPass);
+                        $this->plugin->saveConfig();
+                        $this->plugin->reloadConfig();
+
+                        $sender->sendMessage(TextFormat::GREEN."Password has been set to ".$this->dpPass.". Continue with /rts setup DATABASE <value>");
+                        break;
+
+                    case "DATABASE":
+                        if(count($args) < 3 or $args[2] === null or $args[2] == "" or $this->dpType !== "MYSQL") {
+                            $sender->sendMessage(TextFormat::RED."Database cannot be empty, null or specified on unsupported types.");
+                            return true;
+                        }
+
+                        $this->dpDb = $args[2];
+                        $this->plugin->getConfig()->setNested("storage.database", $this->dpDb);
+                        $this->plugin->saveConfig();
+                        $this->plugin->reloadConfig();
+
+                        $sender->sendMessage(TextFormat::GREEN."Database has been set to ".$this->dpDb.". Finish by typing /rts setup SAVE");
+                        break;
+
+                    case "SAVE":
+
+                        if($this->dpType === "MYSQL") {
+                            $failed = false;
+
+                            if(!isset($this->dpHost)) {
+                                $failed = true;
+                                $sender->sendMessage(TextFormat::RED."Hostname is not set. /rts setup HOST <value>");
+                            }
+
+                            if(!isset($this->dpDb)) {
+                                $failed = true;
+                                $sender->sendMessage(TextFormat::RED."Database is not set. /rts setup DATABASE <value>");
+                            }
+
+                            if(!isset($this->dpPort)) {
+                                $failed = true;
+                                $sender->sendMessage(TextFormat::RED."Port is not set. /rts setup PORT <value>");
+                            }
+
+                            if(!isset($this->dpPass)) {
+                                $failed = true;
+                                $sender->sendMessage(TextFormat::RED."Password is not set. /rts setup PASSWORD <value>");
+                            }
+
+                            if(!isset($this->dpUser)) {
+                                $failed = true;
+                                $sender->sendMessage(TextFormat::RED."Username is not set. /rts setup USERNAME <value>");
+                            }
+
+                            if($failed) {
+                                $sender->sendMessage(TextFormat::RED."Some settings are not correct. Make sure they are all correct.");
+                                return true;
+                            }
+
+                            $this->plugin->reloadSettings();
+                        }
+
+                        break;
+
+                    default:
+                        $sender->sendMessage("Valid actions: TYPE, HOST, PORT, DATABASE, USERNAME, PASSWORD");
+                        $sender->sendMessage("When you are done, type /rts setup save. Type /rts setup to view this message again.");
+                        return true;
+                }
+
                 break;
 
             default:

@@ -8,6 +8,7 @@ use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\item\Sign;
 
+use pocketmine\utils\TextFormat;
 use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\task\LoginTask;
@@ -26,6 +27,15 @@ class RTSListener implements Listener {
     }
 
     public function onPlayerJoin(PlayerJoinEvent $event) {
+
+        if($this->plugin->isDefault) {
+            if($event->getPlayer()->isOp()) {
+                $event->getPlayer()->sendMessage(TextFormat::RED."You need to set up ReportRTS! Use /rts setup <action> <argument>");
+                $this->plugin->getServer()->dispatchCommand($event->getPlayer(), "reportrts setup");
+            }
+            return;
+        }
+
         if(count($this->plugin->notifications) > 0) {
             /** @var Ticket[] $found */
             $found = [];

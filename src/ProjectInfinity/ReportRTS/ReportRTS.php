@@ -23,7 +23,7 @@ class ReportRTS extends PluginBase {
     public $ticketNagHeld;
     public $ticketHideOffline;
 
-    public $isSetup;
+    public $isDefault;
 
     # Array containing all tickets.
     /** @var Ticket[]  */
@@ -43,18 +43,19 @@ class ReportRTS extends PluginBase {
     protected $provider;
 
     public function onEnable() {
+        $this->saveDefaultConfig();
         $this->getLogger()->info("Welcome to the Alpha for ReportRTS. Please report any bugs you may discover to https://github.com/ProjectInfinity/ReportRTS-Pocket-Edition/issues.
         This project is a large Bukkit project that is being ported to PocketMine, be patient.");
 
+        # Set up MessageHandler.
+        MessageHandler::load();
+
         if($this->isDefault()) {
-            # TODO: Insert what happens if the server is running a default configuration that will not work.
+            $this->getLogger()->info("**** You need to set up your storage settings! You can start by typing /rts setup. OPs will automatically be welcomed with the setup screen until you have finished it. ****");
         } else {
             # Server is not running on default settings that prevent the plugin from operating, therefore load settings.
             $this->reloadSettings();
         }
-
-        # Set up MessageHandler.
-        MessageHandler::load();
 
         # Register commands.
         $this->getCommand("ticket")->setExecutor(new TicketCommand($this));
