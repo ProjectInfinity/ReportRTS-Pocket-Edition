@@ -213,7 +213,24 @@ class ReportRTSCommand implements CommandExecutor {
                 break;
 
             case "HELP":
+                if(!PermissionHandler::canSeeHelp) {
+                    $sender->sendMessage(sprintf(MessageHandler::$permissionError, PermissionHandler::canSeeHelp));
+                    return true;
+                }
 
+                # Start messaging the player.
+                $sender->sendMessage("====[ ".TextFormat::GOLD."ReportRTS Help ".TextFormat::GREEN."]====");
+                $sender->sendMessage(TextFormat::GOLD."/ticket read <status> <page> ".TextFormat::RESET."-".TextFormat::YELLOW." See ticket details");
+                $sender->sendMessage(TextFormat::GOLD."/ticket claim <id> ".TextFormat::RESET."-".TextFormat::YELLOW." Claim a ticket, no toe stepping");
+                $sender->sendMessage(TextFormat::GOLD."/ticket unclaim <id> ".TextFormat::RESET."-".TextFormat::YELLOW." Unlaim a ticket");
+                $sender->sendMessage(TextFormat::GOLD."/ticket close <id> <comment> ".TextFormat::RESET."-".TextFormat::YELLOW." Closes a ticket, optional comment");
+                $sender->sendMessage(TextFormat::GOLD."/ticket hold <id> <reason> ".TextFormat::RESET."-".TextFormat::YELLOW." Put ticket on hold, optional reason");
+                $sender->sendMessage(TextFormat::GOLD."/ticket open <message> ".TextFormat::RESET."-".TextFormat::YELLOW." Opens a ticket");
+                $sender->sendMessage(TextFormat::GOLD."/ticket reopen <id> ".TextFormat::RESET."-".TextFormat::YELLOW." Reopens specified ticket");
+                $sender->sendMessage(TextFormat::GOLD."/ticket staff ".TextFormat::RESET."-".TextFormat::YELLOW." See online staff");
+                $sender->sendMessage(TextFormat::GOLD."/ticket tp <id> ".TextFormat::RESET."-".TextFormat::YELLOW." Teleport to ticket");
+                $sender->sendMessage(TextFormat::GOLD."/ticket broadcast ".TextFormat::RESET."-".TextFormat::YELLOW." Message online staff");
+                $sender->sendMessage(TextFormat::GOLD."/reportrts <action>".TextFormat::RESET."-".TextFormat::YELLOW." General ReportRTS command.");
                 break;
 
             case "DUTY":
