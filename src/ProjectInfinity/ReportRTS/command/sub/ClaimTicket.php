@@ -73,7 +73,7 @@ class ClaimTicket {
         # Set ticket info in the ticket array too.
         $ticket->setStatus(1);
         $ticket->setStaffName($sender->getName());
-        $ticket->setStaffId($this->data->getUser($sender->getName())['id']);
+        $ticket->setStaffId($this->data->getUser($sender->getName(), 0, true)['id']);
         $ticket->setStaffTimestamp($timestamp);
         unset(ReportRTS::$tickets[$ticketId]);
         ReportRTS::$tickets[$args[1]] = $ticket;

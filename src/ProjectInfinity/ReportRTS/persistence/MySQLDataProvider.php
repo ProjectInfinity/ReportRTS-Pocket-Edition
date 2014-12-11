@@ -296,7 +296,7 @@ class MySQLDataProvider implements DataProvider {
         if(!ctype_alnum($username)) return -1;
 
         # Check if user exists. Array_filter might be necessary, we'll find out.
-        $user = $this->getUser($username);
+        $user = $this->getUser($username, 0 , true);
         if(empty($user)) {
             return -1;
         }
@@ -368,9 +368,10 @@ class MySQLDataProvider implements DataProvider {
     /**
      * @param $username
      * @param $id;
+     * @param $createIfNotExists
      * @return Array
      */
-    public function getUser($username = null, $id = 0) {
+    public function getUser($username = null, $id = 0, $createIfNotExists = false) {
         $sql = null;
         if($username != null) {
             $sql = $this->database->prepare("SELECT * FROM `reportrts_users` WHERE `name` = ? LIMIT 1");
@@ -384,6 +385,13 @@ class MySQLDataProvider implements DataProvider {
         $sql->execute();
         $sql->bind_result($id, $name, $banned);
         $sql->fetch();
+
+        # Create the user if it does not exist.
+        if($createIfNotExists === true and $id === 0) {
+            $id = $this->createUser($username);
+            $name = $username;
+            $banned = 0;
+        }
 
         $array = [
             "id" => (int) $id,

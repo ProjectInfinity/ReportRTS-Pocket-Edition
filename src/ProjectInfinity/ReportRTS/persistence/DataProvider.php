@@ -80,9 +80,10 @@ interface DataProvider {
     /**
      * @param $username
      * @param $id
+     * @param $createIfNotExists
      * @return Array
      */
-    public function getUser($username = null, $id = 0);
+    public function getUser($username = null, $id = 0, $createIfNotExists = false);
 
     public function setTicketStatus($id, $username, $status, $comment, $notified, $timestamp);
     public function setNotificationStatus($id, $status);
