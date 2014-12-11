@@ -76,6 +76,7 @@ class MySQLDataProvider implements DataProvider {
         $sql = $this->database->prepare("INSERT INTO `reportrts_users` (`name`, `banned`) VALUES (?, '0')");
         $sql->bind_param("s", $username);
         $sql->execute();
+        $id = $sql->insert_id;
         $sql->close();
         return $id;
     }
