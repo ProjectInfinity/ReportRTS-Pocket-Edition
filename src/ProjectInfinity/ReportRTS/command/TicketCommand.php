@@ -55,13 +55,15 @@ class TicketCommand implements CommandExecutor {
 
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
 
-        /** Argument checker, DO NOT LEAVE THIS UNCOMMENTED IN PRODUCTION */
-        $i = -1;
-        foreach($args as $arg) {
-        $i++;
-        $this->plugin->getLogger()->info("Position: " . $i . " | Actual Position: " . ($i + 1) . " | Argument: " . $arg);
-        }
-        /** LOOK ABOVE **/
+       if($this->plugin->debug) {
+           /** Argument checker, ONLY FOR DEBUG MODE! */
+           $i = -1;
+           foreach($args as $arg) {
+               $i++;
+               $this->plugin->getLogger()->info("Position: " . $i . " | Actual Position: " . ($i + 1) . " | Argument: " . $arg);
+           }
+           /** LOOK ABOVE **/
+       }
 
         if(count($args) == 0) return false;
         $start = 0.00;
