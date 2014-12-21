@@ -44,8 +44,6 @@ class ReportRTS extends PluginBase {
 
     public function onEnable() {
         $this->saveDefaultConfig();
-        $this->getLogger()->info("Welcome to the Alpha for ReportRTS. Please report any bugs you may discover to https://github.com/ProjectInfinity/ReportRTS-Pocket-Edition/issues.
-        This project is a large Bukkit project that is being ported to PocketMine, be patient.");
 
         # Set up MessageHandler.
         MessageHandler::load();
