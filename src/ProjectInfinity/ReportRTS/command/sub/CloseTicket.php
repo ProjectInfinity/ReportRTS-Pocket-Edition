@@ -82,6 +82,8 @@ class CloseTicket {
             return true;
         }
 
+        $ticket->setStaffName($sender->getName());
+        $ticket->setComment($comment);
 
         $player = $this->plugin->getServer()->getPlayer($ticket->getName());
         if($player != null) {
