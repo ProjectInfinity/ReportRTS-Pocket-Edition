@@ -14,6 +14,7 @@ class LoginTask extends PluginTask {
     private $ticket;
 
     public function __construct(ReportRTS $plugin, Ticket $ticket) {
+        parent::__construct($plugin);
         $this->plugin = $plugin;
         $this->data = $plugin->getDataProvider();
         $this->ticket = $ticket;
@@ -26,7 +27,7 @@ class LoginTask extends PluginTask {
         # Player is online, so we send him/her some messages.
         if ($player != null) {
             $player->sendMessage(MessageHandler::$ticketCloseOffline);
-            $player->sendMessage(sprintf(MessageHandler::$ticketCloseText, $this->$ticket->getMessage(), trim($this->ticket->getComment())));
+            $player->sendMessage(sprintf(MessageHandler::$ticketCloseText, $this->ticket->getMessage(), trim($this->ticket->getComment())));
         }
 
         $this->data->setNotificationStatus($this->ticket->getId(), true);

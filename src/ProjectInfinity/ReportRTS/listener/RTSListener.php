@@ -39,8 +39,8 @@ class RTSListener implements Listener {
         if(count($this->plugin->notifications) > 0) {
             /** @var Ticket[] $found */
             $found = [];
-            foreach($this->plugin->notifications as $ticket => $player) {
-                if(strtoupper($player) != strtoupper($event->getPlayer()->getName())) continue;
+            foreach($this->plugin->notifications as $ticket) {
+                if(strtoupper($ticket->getName()) != strtoupper($event->getPlayer()->getName())) continue;
                 # Store found ticket for later use.
                 array_push($found, $ticket);
             }
