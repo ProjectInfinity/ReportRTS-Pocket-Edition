@@ -153,7 +153,18 @@ class MySQLDataProvider implements DataProvider {
     }
 
     public function getTickets($cursor, $limit, $status = 0) {
-        return $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.uid WHERE ticket.status = '".$status."' ORDER BY ticket.id ".($status > 2 ? "DESC" : "ASC")." LIMIT ".$cursor.",".$limit);
+
+        $tickets = [];
+        $query = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.uid WHERE ticket.status = '".$status."' ORDER BY ticket.id ".($status > 2 ? "DESC" : "ASC")." LIMIT ".$cursor.",".$limit);
+
+        while($row = $query->fetch_assoc()) {
+            $tickets[$row['id']] = new Ticket($row['id'], $row['status'], $row['x'], $row['y'], $row['z'], $row['staffId'], $row['yaw'],
+                $row['pitch'], $row['timestamp'], $row['staffTime'], $row['text'], $row['name'], $row['world'], null, $row['comment']);
+        }
+
+        $query->close();
+
+        return $tickets;
 }
 
     /** @return Ticket */

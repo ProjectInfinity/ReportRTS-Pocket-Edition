@@ -126,13 +126,13 @@ class ReadTicket {
         }
 
         # Loop tickets if any.
-        while($row = $data->fetch_assoc()) {
-            $online = ToolBox::isOnline($row['name']) ? TextFormat::GREEN : TextFormat::RED;
-            $substring = ToolBox::shortenMessage($row['text']);
+        foreach($data as $ticket) {
+            $online = ToolBox::isOnline($ticket->getName()) ? TextFormat::GREEN : TextFormat::RED;
+            $substring = ToolBox::shortenMessage($ticket->getMessage());
 
-            $sender->sendMessage(TextFormat::GOLD."#".$row['id']." ".date("d-m-Y h:i:s", $row['timestamp'])." by ".$online.$row['name'].TextFormat::GOLD." - ".TextFormat::GRAY.$substring);
+            $sender->sendMessage(TextFormat::GOLD."#".$ticket->getId()." ".date("d-m-Y h:i:s", $ticket->getTimestamp())." by ".$online.$ticket->getName().TextFormat::GOLD." - ".TextFormat::GRAY.$substring);
         }
-        $data->close();
+
         return true;
     }
 
@@ -162,13 +162,12 @@ class ReadTicket {
         }
 
         # Loop tickets if any.
-        while($row = $data->fetch_assoc()) {
-            $online = ToolBox::isOnline($row['name']) ? TextFormat::GREEN : TextFormat::RED;
-            $substring = ToolBox::shortenMessage($row['text']);
+        foreach($data as $ticket) {
+            $online = ToolBox::isOnline($ticket->getName()) ? TextFormat::GREEN : TextFormat::RED;
+            $substring = ToolBox::shortenMessage($ticket->getMessage());
 
-            $sender->sendMessage(TextFormat::GOLD."#".$row['id']." ".date("d-m-Y h:i:s", $row['timestamp'])." by ".$online.$row['name'].TextFormat::GOLD." - ".TextFormat::GRAY.$substring);
+            $sender->sendMessage(TextFormat::GOLD."#".$ticket->getId()." ".date("d-m-Y h:i:s", $ticket->getTimestamp())." by ".$online.$ticket->getName().TextFormat::GOLD." - ".TextFormat::GRAY.$substring);
         }
-        $data->close();
 
         return true;
     }

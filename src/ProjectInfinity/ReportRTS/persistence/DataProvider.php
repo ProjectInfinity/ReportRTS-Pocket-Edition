@@ -43,7 +43,7 @@ interface DataProvider {
      * @param int $cursor
      * @param int $limit
      * @param int $status
-     * @return \mysqli_result
+     * @return Ticket[]
      */
     public function getTickets($cursor, $limit, $status = 0);
 
