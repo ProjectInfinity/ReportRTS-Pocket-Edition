@@ -31,7 +31,6 @@ class ReportRTSCommand implements CommandExecutor {
     public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
         if(count($args) == 0) return false;
 
-        # TODO: Add all missing logic.
         switch(strtoupper($args[0])) {
 
             case "RELOAD":
