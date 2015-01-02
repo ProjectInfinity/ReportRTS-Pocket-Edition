@@ -1,6 +1,6 @@
 name: ReportRTS
 main: ProjectInfinity\ReportRTS\ReportRTS
-version: 1.0.1
+version: 1.1.0
 api: [1.9.0]
 author: ProjectInfinity
 commands:
