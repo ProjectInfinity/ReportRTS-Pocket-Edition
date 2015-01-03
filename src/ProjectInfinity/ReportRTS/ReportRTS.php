@@ -9,6 +9,7 @@ use ProjectInfinity\ReportRTS\command\TicketCommand;
 use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\listener\RTSListener;
 use ProjectInfinity\ReportRTS\persistence\DataProvider;
+use ProjectInfinity\ReportRTS\persistence\FlintstoneDataProvider;
 use ProjectInfinity\ReportRTS\persistence\MySQLDataProvider;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
 
@@ -36,7 +37,9 @@ class ReportRTS extends PluginBase {
     /** @var Ticket[] */
     public $notifications;
 
+    /** @var Boolean */
     public $debug;
+    /** @var Boolean */
     public $vanish;
 
     /** @var  DataProvider */
@@ -79,9 +82,9 @@ class ReportRTS extends PluginBase {
         $this->reloadConfig();
 
         # Shows debug information in the plugin if enabled.
-        $this->debug = $this->getConfig()->get("general")["debug"];
+        $this->debug = (boolean) $this->getConfig()->getNested("general.debug");
         # Should the plugin hide invisible staff from the list command?
-        $this->vanish = $this->getConfig()->get("general")["hideInvisibleStaff"];
+        $this->vanish = (boolean) $this->getConfig()->getNested("general.hideInvisibleStaff");
 
         # Ticket configuration.
         $this->ticketMax = $this->getConfig()->get("ticket")["max"];
@@ -100,6 +103,13 @@ class ReportRTS extends PluginBase {
         $provider = $this->getConfig()->get("storage")["type"];
         unset($this->provider);
         switch(strtoupper($provider)) {
+
+            case "MEMORY":
+            case "NOSQL":
+            case "FLINTSTONE":
+                if($this->debug) $this->getLogger()->info("Using Flintstone data provider.");
+                $provider = new FlintstoneDataProvider($this);
+                break;
 
             case "MYSQL":
                 if($this->debug) $this->getLogger()->info("Using MySQL data provider.");

@@ -19,3 +19,6 @@
 
 # Ignore scripts.
 *.sh
+
+# Ignore RTS flat files.
+*.dat.gz

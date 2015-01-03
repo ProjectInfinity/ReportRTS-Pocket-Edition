@@ -152,7 +152,10 @@ class MySQLDataProvider implements DataProvider {
         return $tickets;
 }
 
-    /** @return Ticket */
+    /**
+     * @param $id
+     * @return Ticket
+     */
     public function getTicket($id) {
         if(!ToolBox::isNumber($id)) return null;
         $row = $this->database->query("SELECT * FROM `reportrts_tickets` AS `ticket` INNER JOIN `reportrts_users` AS `user` ON ticket.userId = user.uid WHERE ticket.id = '$id' LIMIT 1")->fetch_assoc();
