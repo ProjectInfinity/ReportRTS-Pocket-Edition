@@ -34,11 +34,6 @@ interface DataProvider {
     public function countHeldTickets();
     public function countTickets();
 
-    public function deleteEntry($table, $id);
-
-    public function getUserId($username);
-    public function getLastIdBy($username);
-
     /**
      * @param int $cursor
      * @param int $limit
@@ -52,9 +47,6 @@ interface DataProvider {
      * @return Ticket
      */
     public function getTicket($id);
-    public function getLocation($id);
-    public function getUnnotifiedUsers();
-    public function getEverything($table);
 
     /**
      * @param $username
@@ -88,12 +80,4 @@ interface DataProvider {
     public function setTicketStatus($id, $username, $status, $comment, $notified, $timestamp);
     public function setNotificationStatus($id, $status);
     public function setUserStatus($username, $status);
-
-    public function populateTicketArray();
-
-    public function userExists($player);
-    public function updateTicket($id);
-
-    public function openTicket();
-    # Add more functions as documented in SQLDB.java from line 383.
 }

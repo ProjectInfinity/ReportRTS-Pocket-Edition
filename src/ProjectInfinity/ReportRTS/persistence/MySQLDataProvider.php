@@ -137,21 +137,6 @@ class MySQLDataProvider implements DataProvider {
         return intval($result[0]);
     }
 
-    public function deleteEntry($table, $id)
-    {
-        // TODO: Implement deleteEntry() method.
-    }
-
-    public function getUserId($username)
-    {
-        // TODO: Implement getUserId() method.
-    }
-
-    public function getLastIdBy($username)
-    {
-        // TODO: Implement getLastIdBy() method.
-    }
-
     public function getTickets($cursor, $limit, $status = 0) {
 
         $tickets = [];
@@ -175,21 +160,6 @@ class MySQLDataProvider implements DataProvider {
             $row['pitch'], $row['timestamp'], $row['staffTime'], $row['text'], $row['name'], $row['world'], null, $row['comment']);
         if($ticket->getId() == null) return null;
         return $ticket;
-    }
-
-    public function getLocation($id)
-    {
-        // TODO: Implement getLocation() method.
-    }
-
-    public function getUnnotifiedUsers()
-    {
-        // TODO: Implement getUnnotifiedUsers() method.
-    }
-
-    public function getEverything($table)
-    {
-        // TODO: Implement getEverything() method.
     }
 
     public function getHandledBy($username, $cursor, $limit) {
@@ -330,25 +300,6 @@ class MySQLDataProvider implements DataProvider {
         $stmt->close();
 
         return $result;
-    }
-
-    public function populateTicketArray()
-    {
-        // TODO: Implement populateTicketArray() method.
-    }
-
-    public function userExists($player)
-    {
-        // TODO: Implement userExists() method.
-    }
-
-    public function updateTicket($id)
-    {
-        // TODO: Implement updateTicket() method.
-    }
-
-    public function openTicket() {
-        // TODO: Implement openTicket() method.
     }
 
     /**
