@@ -23,17 +23,28 @@ class FlintstoneDataProvider implements DataProvider {
         ReportRTS::$tickets = $this->load();
     }
 
-    private function buildTicketFromData($ticketData) {
+    private function buildTicketFromData($key, $ticketData) {
 
-        $ticket = new Ticket(
-            $ticketData['id'], $ticketData['status'],
+        # TODO: This is not working correctly, see load for working example.
+        /*$ticket = new Ticket(
+            $key, $ticketData['status'],
             $ticketData['x'], $ticketData['y'],
             $ticketData['z'], $ticketData['yaw'],
             $ticketData['pitch'], $ticketData['timestamp'],
             $ticketData['staffTime'], $ticketData['text'],
             $this->getUser(null, $ticketData['userId'])['username'],
             $ticketData['world'], null,
-            $ticketData['comment']);
+            $ticketData['comment']); */
+
+        $ticket = new Ticket(intval($key), $ticketData['status'], $ticketData['x'], $ticketData['y'], $ticketData['z'], null,
+            $ticketData['yaw'], $ticketData['pitch'], $ticketData['timestamp'], null, $ticketData['text'], $this->getUser(null, $ticketData['userId'])['username'],
+            $ticketData['world'], null, null);
+
+        if($ticket->getStatus() > 0)  {
+            $ticket->setStaffName($this->getUser(null, $ticket->getStaffId())['username']);
+            $ticket->setStaffTimestamp($ticketData['staffTime'] > 0 ? $ticketData['staffTime'] : null);
+            $ticket->setComment(strlen($ticketData['comment']) > 0 ? $ticketData['comment'] : null);
+        }
 
         return $ticket;
     }
@@ -46,7 +57,6 @@ class FlintstoneDataProvider implements DataProvider {
 
         foreach($this->tickets->getKeys() as $key) {
             $ticket = $this->tickets->get($key);
-            var_dump($ticket);
             # Ticket is of incorrect status, let's skip it.
             if($ticket['status'] > 1) continue;
 
@@ -146,9 +156,29 @@ class FlintstoneDataProvider implements DataProvider {
         // TODO: Implement countHeldTickets() method.
     }
 
-    public function countTickets()
-    {
-        // TODO: Implement countTickets() method.
+    /**
+     * Gets a number quoting the amount of tickets of current status.
+     * If no status is specified it defaults to 4 which is a non-valid
+     * status, and should be parsed as ALL tickets.
+     * @param int $status
+     * @return int
+     */
+    public function countTickets($status = 4) {
+
+        $i = 0;
+
+        if($status < 4) {
+
+            foreach($this->tickets->getKeys() as $key) {
+                if($this->tickets->get($key)['status'] != $status) continue;
+                $i++;
+            }
+
+        } else {
+            $i = count($this->tickets->getKeys());
+        }
+
+        return $i;
     }
 
     /**
@@ -158,15 +188,15 @@ class FlintstoneDataProvider implements DataProvider {
      * @return Ticket[]
      */
     public function getTickets($cursor, $limit, $status = 0) {
-
+        # TODO: Implement cursor and limit.
         $tickets = [];
 
         foreach($this->tickets->getKeys() as $key) {
             $ticket = $this->tickets->get($key);
             # Ticket is of incorrect status, let's skip it.
             if($ticket['status'] != $status) continue;
-            # TODO: Figure out how this will work with DESC and ASC.
-            $tickets[$key] = $this->buildTicketFromData($ticket);
+            # TODO: Figure out how this will work with DESC and ASC. Update: It looks funky as hell, needs fixing.
+            $tickets[$key] = $this->buildTicketFromData($key, $ticket);
         }
         return $tickets;
     }
@@ -179,7 +209,7 @@ class FlintstoneDataProvider implements DataProvider {
 
         if(!ToolBox::isNumber($id) or array_key_exists($id, $this->tickets->getKeys())) return null;
 
-        return $this->buildTicketFromData($this->tickets->get($id));
+        return $this->buildTicketFromData($id, $this->tickets->get((String) $id));
 
     }
 
@@ -221,45 +251,90 @@ class FlintstoneDataProvider implements DataProvider {
      * @return Array
      */
     public function getUser($username = null, $id = 0, $createIfNotExists = false) {
-        $user = [];
 
         if($username != null) {
             # Create user if it does not exist.
             if(!array_key_exists($username, $this->users->getKeys()) and $createIfNotExists === true) $this->createUser($username);
             $user = $this->users->get($username);
+            return [
+                "id" => (int) $user['uid'],
+                "username" => $user['name'],
+                "isBanned" => $user['banned'] == 1 ? true : false
+            ];
         }
         if($username == null and $id > 0) {
-
             foreach($this->users->getKeys() as $key) {
                 # UID didn't match ID, continue.
-                if($this->users->get($key)['uid'] !== $id) continue;
-                # We found our user! Let's return him.
-                return $user = [
-                    'id' => $this->users->get($key)['uid'],
-                    'username' => $this->users->get($key)['name'],
-                    'isBanned' => $this->users->get($key)['banned'] == 1 ? true : false
-                ];
+                if($this->users->get($key)['uid'] === $id) {
+                    # We found our user! Let's return it.
+                    $user = [
+                        'uid' => $id,
+                        'name' => $this->users->get($key)['name'],
+                        'banned' => $this->users->get($key)['banned'] == 1 ? true : false
+                    ];
+                    return [
+                        "id" => (int) $user['uid'],
+                        "username" => $user['name'],
+                        "isBanned" => $user['banned'] == 1 ? true : false
+                    ];
+                }
             }
         }
+
         return [
-            "id" => (int) $user['uid'],
-            "username" => $username,
-            "isBanned" => $user['banned'] == 1 ? true : false
+            "id" => 0,
+            "username" => "",
+            "banned" => false
         ];
     }
 
-    public function setTicketStatus($id, $username, $status, $comment, $notified, $timestamp)
-    {
-        // TODO: Implement setTicketStatus() method.
+    public function setTicketStatus($id, $username, $status, $comment, $notified, $timestamp) {
+
+        if(!isset(ReportRTS::$tickets[$id])) {
+            # Ticket is not of status OPEN(1).
+            $ticket = $this->getTicket($id);
+            if($ticket == null) return -3;
+        } else {
+            # Retrieve ticket from ticket array.
+            $ticket = ReportRTS::$tickets[$id];
+        }
+
+        # Make sure username is alphanumeric.
+        if(!ctype_alnum($username)) return -1;
+
+        # Check if user exists. Array_filter might be necessary, we'll find out.
+        $user = $this->getUser($username, 0 , true);
+        if(empty($user)) {
+            return -1;
+        }
+
+        # Make sure ticket statuses don't clash.
+        if($ticket->getStatus() == $status or ($status == 2 && $ticket->getStatus() == 3)) return -2;
+
+        return $this->tickets->replace((String) $id, [
+            'userId' => $this->getUser($ticket->getName())['id'],
+            'staffId' => $user['id'],
+            'staffTime' => $timestamp,
+            'status' => $status,
+            'notified' => 0,
+            'timestamp' => $timestamp,
+            'world' => $ticket->getWorld(),
+            'x' => $ticket->getX(),
+            'y' => $ticket->getY(),
+            'z' => $ticket->getZ(),
+            'yaw' => $ticket->getYaw(),
+            'pitch' => $ticket->getPitch(),
+            'comment' => $comment,
+            'text' => $ticket->getMessage(),
+        ]) ? 1 : 0;
+
     }
 
-    public function setNotificationStatus($id, $status)
-    {
+    public function setNotificationStatus($id, $status) {
         // TODO: Implement setNotificationStatus() method.
     }
 
-    public function setUserStatus($username, $status)
-    {
+    public function setUserStatus($username, $status) {
         // TODO: Implement setUserStatus() method.
     }
 }
