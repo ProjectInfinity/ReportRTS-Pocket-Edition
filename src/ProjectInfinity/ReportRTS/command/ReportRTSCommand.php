@@ -218,7 +218,7 @@ class ReportRTSCommand implements CommandExecutor {
                 }
 
                 # Start messaging the player.
-                $sender->sendMessage("====[ ".TextFormat::GOLD."ReportRTS Help ".TextFormat::GREEN."]====");
+                $sender->sendMessage(TextFormat::GREEN."====[ ".TextFormat::GOLD."ReportRTS Help ".TextFormat::GREEN."]====");
                 $sender->sendMessage(TextFormat::GOLD."/ticket read <status> <page> ".TextFormat::RESET."-".TextFormat::YELLOW." See ticket details");
                 $sender->sendMessage(TextFormat::GOLD."/ticket claim <id> ".TextFormat::RESET."-".TextFormat::YELLOW." Claim a ticket, no toe stepping");
                 $sender->sendMessage(TextFormat::GOLD."/ticket unclaim <id> ".TextFormat::RESET."-".TextFormat::YELLOW." Unlaim a ticket");
