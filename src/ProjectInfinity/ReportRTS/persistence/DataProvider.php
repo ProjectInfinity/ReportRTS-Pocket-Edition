@@ -31,7 +31,6 @@ interface DataProvider {
     public function createTicket($sender, $world, Position $location, $yaw, $pitch, $message, $timestamp);
 
     /** @returns Integer */
-    public function countHeldTickets();
     public function countTickets();
 
     /**

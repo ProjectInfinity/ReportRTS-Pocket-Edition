@@ -111,10 +111,6 @@ class MySQLDataProvider implements DataProvider {
         return $id;
     }
 
-    public function countHeldTickets() {
-        return 0;
-    }
-
     /**
      * Gets a number quoting the amount of tickets of current status.
      * If no status is specified it defaults to 4 which is a non-valid
