@@ -331,7 +331,20 @@ class FlintstoneDataProvider implements DataProvider {
     }
 
     public function setNotificationStatus($id, $status) {
-        // TODO: Implement setNotificationStatus() method.
+
+        # If -1 is returned then either the ID is not a number or the status is not a boolean.
+        if(!ToolBox::isNumber($id) or !is_bool($status)) return -1;
+
+        $id = intval($id);
+        $status = $status ? 1 : 0 ;
+
+        $ticket = $this->tickets->get((String) $id);
+        $ticket['notified'] = $status;
+        $this->tickets->replace((String) $id, $ticket);
+        $ticket = $this->tickets->get((String) $id);
+
+        return $status == $ticket['notified'] ? 0 : 1;
+
     }
 
     public function setUserStatus($username, $status) {
