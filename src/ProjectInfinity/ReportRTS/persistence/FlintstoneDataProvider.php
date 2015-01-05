@@ -348,6 +348,17 @@ class FlintstoneDataProvider implements DataProvider {
     }
 
     public function setUserStatus($username, $status) {
-        // TODO: Implement setUserStatus() method.
+
+        # User status has to be a boolean.
+        if(!is_bool($status)) return 0;
+
+        $status = $status ? 1 : 0;
+
+        $user = $this->users->get($username);
+        $user['banned'] = $status;
+        $this->users->replace($username, $user);
+        $user = $this->users->get($username);
+
+        return $status == $user['banned'] ? 0 : 1;
     }
 }
