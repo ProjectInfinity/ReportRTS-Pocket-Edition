@@ -341,13 +341,15 @@ class FlintstoneDataProvider implements DataProvider {
         # User status has to be a boolean.
         if(!is_bool($status)) return 0;
 
-        $status = $status ? 1 : 0;
-
         $user = $this->users->get($username);
+
+        # Return if status is the same as the one provided.
+        if($status == $user['banned']) return 0;
         $user['banned'] = $status;
+
         $this->users->replace($username, $user);
         $user = $this->users->get($username);
 
-        return $status == $user['banned'] ? 0 : 1;
+        return $status == $user['banned'] ? 1 : 0;
     }
 }
