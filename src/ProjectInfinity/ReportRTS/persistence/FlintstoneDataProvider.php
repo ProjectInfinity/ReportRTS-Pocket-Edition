@@ -25,17 +25,6 @@ class FlintstoneDataProvider implements DataProvider {
 
     private function buildTicketFromData($key, $ticketData) {
 
-        # TODO: This is not working correctly, see load for working example.
-        /*$ticket = new Ticket(
-            $key, $ticketData['status'],
-            $ticketData['x'], $ticketData['y'],
-            $ticketData['z'], $ticketData['yaw'],
-            $ticketData['pitch'], $ticketData['timestamp'],
-            $ticketData['staffTime'], $ticketData['text'],
-            $this->getUser(null, $ticketData['userId'])['username'],
-            $ticketData['world'], null,
-            $ticketData['comment']); */
-
         $ticket = new Ticket(intval($key), $ticketData['status'], $ticketData['x'], $ticketData['y'], $ticketData['z'], null,
             $ticketData['yaw'], $ticketData['pitch'], $ticketData['timestamp'], null, $ticketData['text'], $this->getUser(null, $ticketData['userId'])['username'],
             $ticketData['world'], null, null);
