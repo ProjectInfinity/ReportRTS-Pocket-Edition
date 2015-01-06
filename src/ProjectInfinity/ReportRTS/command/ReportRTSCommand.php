@@ -71,11 +71,11 @@ class ReportRTSCommand implements CommandExecutor {
 
                 # Check if user status was set.
                 if($result < 1) {
-                    $sender->sendMessage(sprintf(MessageHandler::$generalError, "No affected users. This shouldn't happen."));
+                    $sender->sendMessage(sprintf(MessageHandler::$generalError, "No affected users. User may already be banned."));
                     return true;
                 }
 
-                $this->plugin->messageStaff(sprintf(MessageHandler::$userBanned, $args[1]));
+                $this->plugin->messageStaff(sprintf(MessageHandler::$userBanned, $sender->getName(), $args[1]));
 
                 break;
 
