@@ -454,7 +454,7 @@ class ReportRTSCommand implements CommandExecutor {
                 break;
 
             default:
-                $sender->sendMessage(MessageHandler::$generalError);
+                $sender->sendMessage(MessageHandler::$generalError, "No valid action specified, see /rts help.");
                 return false;
         }
         return true;
