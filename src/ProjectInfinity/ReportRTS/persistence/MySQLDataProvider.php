@@ -231,7 +231,7 @@ class MySQLDataProvider implements DataProvider {
 
         $result = [];
 
-        while($row = $query->fetch_assoc()) array_push($result, $row);
+        while($row = $query->fetch_assoc()) $result[$row['name']] = (int) $row['tickets'];
 
         return $result;
     }

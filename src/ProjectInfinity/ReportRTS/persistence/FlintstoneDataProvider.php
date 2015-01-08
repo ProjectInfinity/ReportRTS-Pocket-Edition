@@ -196,15 +196,14 @@ class FlintstoneDataProvider implements DataProvider {
 
     }
 
-    /**
-     * @param $username
-     * @param $cursor
-     * @param $limit
-     * @return Ticket[]|mixed
-     */
-    public function getHandledBy($username, $cursor, $limit)
-    {
-        // TODO: Implement getHandledBy() method.
+    private function getTicketsBy($username, $cursor, $limit, $creator) {
+
+        $user = $this->getUser($username);
+        if ($user['id'] === 0) {
+            return false;
+        }
+
+
     }
 
     /**
@@ -213,18 +212,47 @@ class FlintstoneDataProvider implements DataProvider {
      * @param $limit
      * @return Ticket[]|mixed
      */
-    public function getOpenedBy($username, $cursor, $limit)
-    {
-        // TODO: Implement getOpenedBy() method.
+    public function getHandledBy($username, $cursor, $limit) {
+        return $this->getTicketsBy($username, $cursor, $limit, false);
+    }
+
+    /**
+     * @param $username
+     * @param $cursor
+     * @param $limit
+     * @return Ticket[]|mixed
+     */
+    public function getOpenedBy($username, $cursor, $limit) {
+        return $this->getTicketsBy($username, $cursor, $limit, true);
     }
 
     /**
      * @param int $limit
      * @return Array
      */
-    public function getTop($limit)
-    {
-        // TODO: Implement getTop() method.
+    public function getTop($limit) {
+
+        if(!is_int($limit)) return [];
+
+        $result = [];
+
+        foreach($this->tickets->getKeys() as $key) {
+            $ticket = $this->tickets->get($key);
+
+            # We only want tickets that are closed.
+            if($ticket['status'] != 3) continue;
+
+            $user = $this->getUser(null, $ticket['staffId']);
+
+            # Ensure that array key exists, we don't want any errors.
+            if(!array_key_exists($user['username'], $result)) $result[$user['username']] = 0;
+
+            $result[$user['username']] = $result[$user['username']] + 1;
+        }
+
+        arsort($result);
+        # Sorts the array by value, descending.
+        return array_slice($result, 0, $limit, true);
     }
 
     /**

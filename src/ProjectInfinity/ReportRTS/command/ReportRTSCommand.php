@@ -148,7 +148,7 @@ class ReportRTSCommand implements CommandExecutor {
                 $i = 0;
                 foreach($data as $array => $value) {
                     $i++;
-                    $sender->sendMessage(TextFormat::YELLOW.$i.". ". $value['name']." : ".$value['tickets']);
+                    $sender->sendMessage(TextFormat::YELLOW.$i.". ". $array." : ".$value);
                 }
 
                 break;
