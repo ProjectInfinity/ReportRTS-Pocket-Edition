@@ -203,7 +203,83 @@ class FlintstoneDataProvider implements DataProvider {
             return false;
         }
 
+        $return = null;
 
+        if($creator) {
+
+            $result = [];
+            $i = 0;
+            $l = 0;
+            foreach($this->tickets->getKeys() as $key) {
+
+                $ticket = $this->tickets->get($key);
+
+                # Return array because we have reached the limit.
+                if($l >= $limit) return $result;
+
+
+                ## Debug line for pagination ##
+                #echo PHP_EOL."i:".$i."/".$cursor." l:".$l."/".$limit.PHP_EOL;
+
+
+                # Continue because the ticket is not opened by the user we are looking for.
+                if($ticket['userId'] != $user['id']) continue;
+
+                # Increment the counter because the cursor is higher than the counter.
+                if($cursor > $i) {
+                    $i++;
+                    continue;
+                }
+
+                $result[intval($key)] = $this->buildTicketFromData($key, $ticket);
+
+                if($i < $limit) $i++;
+                $l++;
+
+            }
+
+        } else {
+
+            $result = [];
+
+            $i = 0;
+            $l = 0;
+
+            $invertedKeys = $this->tickets->getKeys();
+            arsort($invertedKeys);
+            foreach($invertedKeys as $key) {
+
+                $ticket = $this->tickets->get($key);
+
+                # Continue if ticket is NOT closed.
+                if($ticket['status'] < 3) continue;
+
+                # Return array because we have reached the limit.
+                if($l >= $limit) {
+                    arsort($result);
+                    return $result;
+                }
+
+                ## Debug line for pagination ##
+                #echo PHP_EOL."i:".$i."/".$cursor." l:".$l."/".$limit.PHP_EOL;
+
+                # Continue because the ticket is not closed by the user we are looking for.
+                if($ticket['staffId'] != $user['id']) continue;
+
+                # Increment the counter because the cursor is higher than the counter.
+                if($cursor > $i) {
+                    $i++;
+                    continue;
+                }
+
+                $result[intval($key)] = $this->buildTicketFromData($key, $ticket);
+
+                if($i < $limit) $i++;
+                $l++;
+
+            }
+        }
+        return $result;
     }
 
     /**
