@@ -4,9 +4,9 @@ namespace ProjectInfinity\ReportRTS\persistence;
 
 use pocketmine\level\Position;
 
+use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\lib\flintstone\Flintstone;
-use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\ToolBox;
 
 class FlintstoneDataProvider implements DataProvider {
@@ -171,15 +171,39 @@ class FlintstoneDataProvider implements DataProvider {
      * @return Ticket[]
      */
     public function getTickets($cursor, $limit, $status = 0) {
-        # TODO: Implement cursor and limit.
+
         $tickets = [];
 
-        foreach($this->tickets->getKeys() as $key) {
+        $i = 0;
+        $l = 0;
+
+        $keys = $this->tickets->getKeys();
+        if($status == 3) arsort($keys);
+
+        foreach($keys as $key) {
             $ticket = $this->tickets->get($key);
+
+            # Return array because we have reached the limit.
+            if($l >= $limit) return $tickets;
+
+            ## Debug line for pagination ##
+            #echo PHP_EOL."i:".$i."/".$cursor." l:".$l."/".$limit.PHP_EOL;
+
             # Ticket is of incorrect status, let's skip it.
             if($ticket['status'] != $status) continue;
+
+            # Increment the counter because the cursor is higher than the counter.
+            if($cursor > $i) {
+                $i++;
+                continue;
+            }
+
             $tickets[$key] = $this->buildTicketFromData($key, $ticket);
             if($status == 3) arsort($tickets);
+
+            if($i < $limit) $i++;
+            $l++;
+
         }
         return $tickets;
     }
