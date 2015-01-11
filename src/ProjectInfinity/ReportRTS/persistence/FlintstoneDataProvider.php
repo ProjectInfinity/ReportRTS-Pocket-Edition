@@ -178,8 +178,8 @@ class FlintstoneDataProvider implements DataProvider {
             $ticket = $this->tickets->get($key);
             # Ticket is of incorrect status, let's skip it.
             if($ticket['status'] != $status) continue;
-            # TODO: Figure out how this will work with DESC and ASC. Update: It looks funky as hell, needs fixing.
             $tickets[$key] = $this->buildTicketFromData($key, $ticket);
+            if($status == 3) arsort($tickets);
         }
         return $tickets;
     }
@@ -217,10 +217,8 @@ class FlintstoneDataProvider implements DataProvider {
                 # Return array because we have reached the limit.
                 if($l >= $limit) return $result;
 
-
                 ## Debug line for pagination ##
                 #echo PHP_EOL."i:".$i."/".$cursor." l:".$l."/".$limit.PHP_EOL;
-
 
                 # Continue because the ticket is not opened by the user we are looking for.
                 if($ticket['userId'] != $user['id']) continue;
