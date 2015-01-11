@@ -76,7 +76,20 @@ class FlintstoneDataProvider implements DataProvider {
     }
 
     public function resetNotifications() {
-        // TODO: Implement resetNotifications() method.
+
+        foreach($this->tickets->getKeys() as $key) {
+
+            $ticket = $this->tickets->get($key);
+
+            if($ticket['notified'] == 1) continue;
+
+            $ticket['notified'] = 1;
+
+            $this->tickets->replace($key, $ticket);
+
+        }
+
+        return true;
     }
 
     public function createUser($username) {
