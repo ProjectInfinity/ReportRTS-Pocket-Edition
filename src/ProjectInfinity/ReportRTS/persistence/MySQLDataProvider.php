@@ -16,10 +16,14 @@ class MySQLDataProvider implements DataProvider {
     /** @var  \mysqli */
     protected $database;
 
+    protected $userCache;
+
     /** @param ReportRTS $plugin */
     public function __construct(ReportRTS $plugin) {
         $this->plugin = $plugin;
         $config = $this->plugin->getConfig()->get("storage");
+
+        $this->userCache = [];
 
         if(!isset($config["host"])  or !isset($config["username"]) or !isset($config["password"])
         or !isset($config["database"])) {
@@ -312,6 +316,10 @@ class MySQLDataProvider implements DataProvider {
     public function getUser($username = null, $id = 0, $createIfNotExists = false) {
         $sql = null;
         if($username != null) {
+
+            # Get the user from the cache if it exists. TODO: Add expiry.
+            if(array_key_exists($username, $this->userCache)) return $this->userCache[$username];
+
             $sql = $this->database->prepare("SELECT * FROM `reportrts_users` WHERE `name` = ? LIMIT 1");
             $sql->bind_param("s", $username);
         }
@@ -338,6 +346,9 @@ class MySQLDataProvider implements DataProvider {
         ];
 
         $sql->close();
+
+        if(!array_key_exists($username, $this->userCache)) $this->userCache[$username] = $array;
+
         return $array;
     }
 
