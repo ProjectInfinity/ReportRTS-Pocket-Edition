@@ -296,6 +296,14 @@ class MySQLDataProvider implements DataProvider {
         # User status has to be a boolean.
         if(!is_bool($status)) return 0;
 
+        $user = null;
+
+        # Check if user is in cache, and set isBanned to status.
+        if(array_key_exists($username, $this->userCache)) {
+            $user = $this->userCache[$username];
+            $user['isBanned'] = $status;
+        }
+
         $status = $status ? 1 : 0;
 
         $stmt = $this->database->prepare("UPDATE `reportrts_users` SET  `banned` = ? WHERE `name` = ? LIMIT 1");
@@ -303,6 +311,9 @@ class MySQLDataProvider implements DataProvider {
         $stmt->execute();
         $result = $stmt->affected_rows;
         $stmt->close();
+
+        # Update cache.
+        if($result > 0 and $user != null) $this->userCache[$username] = $user;
 
         return $result;
     }
