@@ -85,7 +85,7 @@ class MessageHandler {
         self::$ticketUnclaimUser = self::parseColors('%gold%%s is no longer handling your ticket.');
         self::$ticketClaimText = self::parseColors('%gold%Ticket text: %yellow%%s');
         self::$ticketHold = self::parseColors('%gold%Ticket #%u was put on hold by %s');
-        self::$ticketHoldText = self::parseColors('%gold%Your ticket was put on hold by %s');
+        self::$ticketHoldUser = self::parseColors('%gold%Your ticket was put on hold by %s');
         self::$ticketHoldText = self::parseColors('%gold%Ticket text: %yellow%%s %gold%Reason: %yellow%%s');
         self::$userNotExists = self::parseColors('%red%The specified user %s does not exist or contains invalid characters.');
         self::$userBanned = self::parseColors('%gold%%s has forbid %s from opening new tickets.');
