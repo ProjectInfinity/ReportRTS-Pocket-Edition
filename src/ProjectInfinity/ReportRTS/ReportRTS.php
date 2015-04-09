@@ -68,7 +68,7 @@ class ReportRTS extends PluginBase {
 
     public function onDisable() {
         # Close data provider connection.
-        $this->provider->close();
+        if($this->provider !== null) $this->provider->close();
 
         # Cleanup, in case of a reload.
         unset($this->staff);
