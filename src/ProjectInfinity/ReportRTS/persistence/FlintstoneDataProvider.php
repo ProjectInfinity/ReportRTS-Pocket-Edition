@@ -54,7 +54,7 @@ class FlintstoneDataProvider implements DataProvider {
                 $ticket['world'], null, null);
 
             if($ticketClass->getStatus() > 0)  {
-                $ticketClass->setStaffName($this->getUser(null, $ticket->getStaffId())['username']);
+                $ticketClass->setStaffName($this->getUser(null, $ticket['staffId'])['username']);
                 $ticketClass->setStaffTimestamp($ticket['staffTime'] > 0 ? $ticket['staffTime'] : null);
                 $ticketClass->setComment(strlen($ticket['comment']) > 0 ? $ticket['comment'] : null);
             }
