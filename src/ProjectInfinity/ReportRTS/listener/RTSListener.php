@@ -65,7 +65,7 @@ class RTSListener implements Listener {
     }
 
     public function onSignChange(SignChangeEvent $event) {
-        if($event->getBlock()->getID() != 323 && $event->getBlock()->getID() != 63 && $event->getBlock()->getID() != 68) return;
+        if($event->getBlock()->getID() != 63 && $event->getBlock()->getID() != 68) return;
         $block = $event->getBlock();
         if(!($block instanceof Sign)) return;
         $sign = $block->getText();
