@@ -3,7 +3,7 @@
 namespace ProjectInfinity\ReportRTS\task;
 
 use mysqli;
-use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\Task;
 use ProjectInfinity\ReportRTS\ReportRTS;
 
 class MySQLKeepAliveTask extends PluginTask {
