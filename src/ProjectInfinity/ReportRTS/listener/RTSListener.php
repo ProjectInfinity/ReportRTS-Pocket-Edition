@@ -48,7 +48,7 @@ class RTSListener implements Listener {
             if(count($found) > 1) $event->getPlayer()->sendMessage(sprintf(MessageHandler::$ticketCloseMulti, count($found), "ticket ".$this->plugin->commands['readTicket']." self"));
 
             foreach($found as $ticket) {
-                $this->plugin->getServer()->getScheduler()->scheduleDelayedTask(new LoginTask($this->plugin, $ticket), 100);
+                $this->plugin->getScheduler()->scheduleDelayedTask(new LoginTask($this->plugin, $ticket), 100);
             }
         }
 
