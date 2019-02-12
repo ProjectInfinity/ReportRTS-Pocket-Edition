@@ -53,7 +53,7 @@ class TicketCommand implements CommandExecutor {
         $this->reopenCommand = new ReopenTicket($plugin);
     }
 
-    public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
 
        if($this->plugin->debug) {
            /** Argument checker, ONLY FOR DEBUG MODE! */
