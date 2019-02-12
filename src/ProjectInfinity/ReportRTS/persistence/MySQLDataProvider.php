@@ -47,7 +47,7 @@ class MySQLDataProvider implements DataProvider {
         fclose($resource);
 
         # Make sure connection stays alive.
-        $this->plugin->getServer()->getScheduler()->scheduleRepeatingTask(new MySQLKeepAliveTask($this->plugin, $this->database), 600);
+        $this->plugin->getScheduler()->scheduleRepeatingTask(new MySQLKeepAliveTask($this->plugin, $this->database), 600);
 
         $this->plugin->getLogger()->info("Connected using MySQL");
 
