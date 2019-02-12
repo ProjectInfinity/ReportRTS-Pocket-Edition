@@ -13,11 +13,10 @@ class MySQLKeepAliveTask extends PluginTask {
 
     public function __construct(ReportRTS $plugin, \mysqli $database) {
 
-        parent::__construct($plugin);
         $this->database = $database;
     }
 
-    public function onRun($currentTick) {
+    public function onRun(int $currentTick) {
         $this->database->ping();
     }
 }
