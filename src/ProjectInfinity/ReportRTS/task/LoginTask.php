@@ -14,13 +14,12 @@ class LoginTask extends PluginTask {
     private $ticket;
 
     public function __construct(ReportRTS $plugin, Ticket $ticket) {
-        parent::__construct($plugin);
         $this->plugin = $plugin;
         $this->data = $plugin->getDataProvider();
         $this->ticket = $ticket;
     }
 
-    public function onRun($currentTick) {
+    public function onRun(int $currentTick) {
 
         # Attempt to get player, this has the potential to fail.
         $player = $this->plugin->getServer()->getPlayer($this->ticket->getName());
