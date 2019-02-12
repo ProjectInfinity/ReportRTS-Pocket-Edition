@@ -2,7 +2,7 @@
 
 namespace ProjectInfinity\ReportRTS\task;
 
-use pocketmine\scheduler\PluginTask;
+use pocketmine\scheduler\Task;
 use ProjectInfinity\ReportRTS\data\Ticket;
 use ProjectInfinity\ReportRTS\ReportRTS;
 use ProjectInfinity\ReportRTS\util\MessageHandler;
