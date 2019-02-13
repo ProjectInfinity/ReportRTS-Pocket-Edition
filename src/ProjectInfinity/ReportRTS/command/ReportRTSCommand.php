@@ -28,7 +28,7 @@ class ReportRTSCommand implements CommandExecutor {
         $this->data = $plugin->getDataProvider();
     }
 
-    public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
+    public function onCommand(CommandSender $sender, Command $command, string $label, array $args): bool {
         if(count($args) == 0) return false;
 
         switch(strtoupper($args[0])) {
