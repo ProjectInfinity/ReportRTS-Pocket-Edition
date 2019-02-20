@@ -6,7 +6,7 @@ use mysqli;
 use pocketmine\scheduler\Task;
 use ProjectInfinity\ReportRTS\ReportRTS;
 
-class MySQLKeepAliveTask extends PluginTask {
+class MySQLKeepAliveTask extends Task {
 
     /** @var mysqli */
     private $database;
